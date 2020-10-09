@@ -64,6 +64,7 @@ class Robo2018():
         tm(3)
 
     def Downloads(self):
+        
         buttons = []
         linhas = []
         k = 0
@@ -71,7 +72,8 @@ class Robo2018():
                     
             k=k+1
             try:
-                linhas.append(self.driver.find_element_by_xpath(f'/html/body/div[2]/div[3]/div[2]/div[1]/div[1]/div[2]/table[2]/tbody/tr[{i}]'))
+                linhas.append(self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/table/tbody/tr[{k}]'))
+
 
 
             except:
@@ -82,26 +84,29 @@ class Robo2018():
         count = 0
         for i in range(len(linhas)):
 
+           
             try:
-                atual = self.linhas[i].find_element_by_class_name('pa')
+                atual = linhas[i].find_element_by_class_name('pa').text
 
-                if count > 0:
+                print(atual)
 
-                    buttons.append(element_atual = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/table/tbody/tr[{count}]/td[5]/a'))
+                count = 1
 
-                    
 
             except:
+                count=count+1
+                print(count)
 
-                try:
+
                     
-                    element_atual = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/table/tbody/tr[{i+1}]/td[5]/a')
-                    count = i+1
-                except:
-                    print('.\n')
+
+
+                
+                    
+
+
 
         print(len(buttons))
-
 
     def quebracaptcha(self):
 
