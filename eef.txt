@@ -1,0 +1,1 @@
+robo= Robot(cpf='60087846934',cnpj='00448750000120',code='337563864600',ano='2016',anticaptcha=False)

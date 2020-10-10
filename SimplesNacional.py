@@ -4,15 +4,15 @@ from time import sleep as tm
 import os
 from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import base64
-import platform
 
 
 class Robot():
 
-    def __init__(self, code, cnpj, cpf, ano):
+    def __init__(self, code, cnpj, cpf, ano,anticaptcha):
+        self.anticaptcha = anticaptcha
         self.raiz = ''
         import platform
-        if plataform.system() == 'Windows':
+        if platform.system() == 'Windows':
             
             self.raiz = '\\'
             
@@ -51,23 +51,33 @@ class Robot():
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.code)
         tm(3)
         
-        a= input('Deseja usar o ANTCAPTCHA [s = sim, n = não]!\n')
+        
+        while(True):
+            try:
+                if self.anticaptcha == True:
+                    
+                    self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
+                    self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                    tm(3)
 
-        if a == 's' or a == 'S':
-            
-            self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
-            self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
-            
-        elif a == 'n' or a == 'N':
-            
-            a= input('Digite o recaptcha e depois digite [c = continuar]!\n')
-            if a == 'c' or a == 'C':
+                    self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/ul/li[6]/a/span').click()
+                    
+                elif self.anticaptcha == False:
+                    
+                    a= input('Digite o captcha e depois digite [c = continuar]!\n')
+                    if a == 'c' or a == 'C':
 
-                self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                        self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                        tm(3)
 
-        tm(3)
+                        self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/ul/li[6]/a/span').click()
+                break
+            except:
+                print('Captcha ERRADA!')
+                tm(2)
+                self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.code)
+                
 
-        self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/ul/li[6]/a/span').click()
 
         tm(4)
 
@@ -111,7 +121,8 @@ class Robot():
                 if count > 0:
 
                     buttons_finals.append(self.driver.find_element_by_xpath(f'/html/body/div[2]/div[3]/div[2]/div[1]/div[1]/div[2]/table[2]/tbody/tr[{count}]/td[1]/a')) 
-
+                    
+                    print(count)
 
             except:
 
@@ -125,13 +136,13 @@ class Robot():
 
             self.driver.execute_script(f'window.scrollBy(0,{scroll})')
 
-            scroll = scroll + 50
+            scroll = scroll + 100
 
             tm(1)
 
             buttons_finals[i].click()
 
-            tm(2)
+            tm(4)
 
             arquivos = [_ for _ in os.listdir(self.path) if _.endswith(r'.pdf')]
 
@@ -163,22 +174,7 @@ class Robot():
 
             self.driver.execute_script('window.scrollBy(0,50)')
 
-        
-
-
-                
- 
-
-
-
-
-
-
-
-
-
-
-        print(len(buttons_finals))
+        self.driver.close()
 
     def quebracaptcha(self):
 
@@ -192,7 +188,7 @@ class Robot():
 
         open('image.png','wb').write(base64.decodebytes(base64_img))
 
-        api_key = 'f482d7c8bebbda3a85950a588e53a40f'
+        api_key = 'fc123745c9de9f98a08ae253ea3dc226'
         captcha_fp = open('image.png', 'rb')
         client = AnticaptchaClient(api_key)
         task = ImageToTextTask(captcha_fp)
@@ -203,10 +199,7 @@ class Robot():
 
 
 
-robo= Robot(cpf='60087846934',cnpj='00448750000120',code='337563864600',ano='2016')
 
-robo.acess()
-robo.Downloads()
 
 
 
