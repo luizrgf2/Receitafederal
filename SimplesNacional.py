@@ -4,17 +4,26 @@ from time import sleep as tm
 import os
 from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import base64
+import platform
 
 
 class Robot():
 
     def __init__(self, code, cnpj, cpf, ano):
-
-        
+        self.raiz = ''
+        import platform
+        if plataform.system() == 'Windows':
+            
+            self.raiz = '\\'
+            
+        else:
+            
+            self.raiz = '/'
+            
         self.code = code
         self.cnpj = cnpj
         self.cpf = cpf
-        self.path = os.getcwd()+f'\\{self.cnpj}'
+        self.path = os.getcwd()+f'{self.raiz}{self.cnpj}'
         self.ano = ano
 
         if os.path.isdir(self.path):
@@ -131,26 +140,26 @@ class Robot():
             texto = tempos[i].text.split('/')
             texto_final = texto[0]+'_'+texto[1]
 
-            if os.path.isdir(self.path+f'\\{self.ano}'):
+            if os.path.isdir(self.path+f'{self.raiz}{self.ano}'):
 
                 print('Ja existe o diretorio!!')
 
             else:
 
-                os.mkdir(self.path+f'\\{self.ano}')
+                os.mkdir(self.path+f'{self.raiz}{self.ano}')
 
             
 
 
-            file = open(self.path+f'\\{arquivos[0]}','rb')
+            file = open(self.path+f'{self.raiz}{arquivos[0]}','rb')
 
-            filecreate = open(self.path+f'\\{self.ano}\\{texto_final}.pdf','wb')
+            filecreate = open(self.path+f'{self.raiz}{self.ano}{self.raiz}{texto_final}.pdf','wb')
             filecreate.write(file.read())
             filecreate.close()
 
             file.close()
 
-            os.remove(self.path+f'\\{arquivos[0]}')
+            os.remove(self.path+f'{self.raiz}{arquivos[0]}')
 
             self.driver.execute_script('window.scrollBy(0,50)')
 

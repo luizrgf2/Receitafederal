@@ -6,15 +6,24 @@ from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import base64
 
 
+
 class Robo2018():
 
     def __init__(self, code, cnpj, cpf, ano):
-
+        self.raiz = ''
+        import platform
+        if platform.system() == 'Windows':
+            
+            self.raiz = '\\'
+            
+        else:
+            
+            self.raiz = '/'
         
         self.code = code
         self.cnpj = cnpj
         self.cpf = cpf
-        self.path = os.getcwd()+f'\\{self.cnpj}'
+        self.path = os.getcwd()+f'{self.raiz}{self.cnpj}'
         self.ano = ano
 
         if os.path.isdir(self.path):
@@ -64,9 +73,10 @@ class Robo2018():
         tm(3)
 
     def Downloads(self):
-        
+        element = None
         buttons = []
         linhas = []
+        tempos = self.driver.find_elements_by_class_name('pa')
         k = 0
         while(True):
                     
@@ -81,32 +91,76 @@ class Robo2018():
                 i = 0
                 break
         
-        count = 0
+        count = 1
         for i in range(len(linhas)):
 
            
             try:
+                count=count+1
                 atual = linhas[i].find_element_by_class_name('pa').text
 
                 print(atual)
 
-                count = 1
+                if count > 0 and element != None:
+                    
+                    buttons.append(element)
 
 
             except:
-                count=count+1
-                print(count)
-
-
-                    
-
-
                 
+                
+                try:
                     
+                    element = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/table/tbody/tr[{count}]/td[5]/a')
+                    
+                except:
+                    
+                    element=element
+        
+        for i in range(len(linhas)+1):
+            
+            
+            try:
+                element = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/table/tbody/tr[{i}]/td[5]/a')
+            except:
+                element = element
+                
+        buttons.append(element)
+        
+        
+        for i in range(len(tempos)):
+            
+            buttons[i].click()
+            
+            tm(3)
+            
+            arquivos = [_ for _ in os.listdir(self.path) if _.endswith(r'.pdf')]
+
+            print(arquivos)  
+            
+            texto = tempos[i].text.split('/')
+            texto_final = texto[0]+'_'+texto[1]
+
+            if os.path.isdir(self.path+f'{self.raiz}{self.ano}'):
+
+                print('Ja existe o diretorio!!')
+
+            else:
+
+                os.mkdir(self.path+f'{self.raiz}{self.ano}')
+
+            
 
 
+            file = open(self.path+f'{self.raiz}{arquivos[0]}','rb')
 
-        print(len(buttons))
+            filecreate = open(self.path+f'{self.raiz}{self.ano}{self.raiz}{texto_final}.pdf','wb')
+            filecreate.write(file.read())
+            filecreate.close()
+
+            file.close()
+
+            os.remove(self.path+f'{self.raiz}{arquivos[0]}')    
 
     def quebracaptcha(self):
 
