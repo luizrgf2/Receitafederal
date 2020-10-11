@@ -9,7 +9,7 @@ import base64
 
 class Robo2018():
 
-    def __init__(self, code, cnpj, cpf, anticapcha):
+    def __init__(self, code, cnpj, cpf, anticapcha, visivel):
         self.raiz = ''
         self.anticapcha = anticapcha
         import platform
@@ -38,7 +38,8 @@ class Robo2018():
         options = webdriver.ChromeOptions() 
         prefs = {'download.default_directory' : f'{self.path}'}
         options.add_experimental_option('prefs', prefs)
-        options.add_argument("--headless")
+        if visivel == False:
+            options.add_argument("--headless")
 
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
 
@@ -63,6 +64,16 @@ class Robo2018():
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
                     
             elif self.anticapcha == False:
+                img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
+
+                image_base64 = img.split('data:image/png;base64,')[1]
+
+                base64_img = image_base64.encode('utf-8')
+
+         
+
+                open('image.png','wb').write(base64.decodebytes(base64_img))
+                
                     
                 a= input('Digite o recaptcha e depois digite [c = continuar]!\n')
                 if a == 'c' or a == 'C':

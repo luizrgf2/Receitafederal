@@ -8,7 +8,7 @@ import base64
 
 class Robot():
 
-    def __init__(self, code, cnpj, cpf,anticaptcha):
+    def __init__(self, code, cnpj, cpf,anticaptcha, visivel):
         self.anticaptcha = anticaptcha
         self.raiz = ''
         import platform
@@ -40,7 +40,8 @@ class Robot():
         
         options.add_argument("--start-maximized")
         
-        options.add_argument("--headless")
+        if visivel == False:
+            options.add_argument("--headless")
 
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
 
