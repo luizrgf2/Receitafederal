@@ -1,23 +1,42 @@
-# Tutorial instalação
+# Tutorial instalação 
 
-Para linux é necessario instalar apenas o pip , depois de instalar cole os comandos no teminal:
+ 
+ 
 
-pip install webdriver_manager
-pip install selenium
-pip install python_anticaptcha
-pip install argparse
+Para linux é necessário instalar apenas o pip , depois de instalar cole os comandos no terminal: 
 
-Para o windows é necessario baixar o python direto do site oficial e manter o pip junto da instalaçao, apos isso apanas axecute o install.bat
+ 
+ 
 
-## execução
+pip install webdriver_manager 
 
-python main.py Password Cnpj Cpf Antcaptcha Ano_inicio Dia_inicio Ano_final Dia_final
+pip install selenium 
 
-exemplo:
+pip install python_anticaptcha 
 
-python main.py 337563864600 00448750000120 60087846934 True 2018 6 2018 8
+pip install argparse 
 
+ 
+ 
 
+Para o windows é necessário baixar o python direto do site oficial e manter o pip junto da instalação, apos isso apenas execute o install.bat 
 
+ 
+ 
 
+## execução 
 
+ 
+ 
+
+python main.py Password Cnpj Cpf Antcaptcha Ano_inicio Dia_inicio Ano_final Dia_final 
+
+ 
+ 
+
+exemplo: 
+
+ 
+ 
+
+python main.py 337563864600 00448750000120 60087846934 True 2018 6 2018 8 
