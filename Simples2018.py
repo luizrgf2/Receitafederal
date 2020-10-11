@@ -9,7 +9,7 @@ import base64
 
 class Robo2018():
 
-    def __init__(self, code, cnpj, cpf, ano, anticapcha):
+    def __init__(self, code, cnpj, cpf, anticapcha):
         self.raiz = ''
         self.anticapcha = anticapcha
         import platform
@@ -25,7 +25,7 @@ class Robo2018():
         self.cnpj = cnpj
         self.cpf = cpf
         self.path = os.getcwd()+f'{self.raiz}{self.cnpj}'
-        self.ano = ano
+        self.ano = '2015'
 
         if os.path.isdir(self.path):
 
@@ -46,7 +46,7 @@ class Robo2018():
         tm(3)
 
     def acess(self):
-        
+        tm(3)
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCNPJ').send_keys(self.cnpj)
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCPFResponsavel').send_keys(self.cpf)
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.code)
@@ -55,50 +55,62 @@ class Robo2018():
         
     
         while(True):
-            try:
-                if self.anticapcha == True:
+        
+            if self.anticapcha == True:
                 
-                    self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
+                self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
+                self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                    
+            elif self.anticapcha == False:
+                    
+                a= input('Digite o recaptcha e depois digite [c = continuar]!\n')
+                if a == 'c' or a == 'C':
+
                     self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
-                    
-                elif self.anticapcha == False:
-                    
-                    a= input('Digite o recaptcha e depois digite [c = continuar]!\n')
-                    if a == 'c' or a == 'C':
+                    tm(2)
 
-                        self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
-                        tm(2)
-
-                self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
+            self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
                 
-                tm(3)
-                self.driver.find_element_by_id('ano').send_keys(self.ano)
-                
-                
-                break
-            except:
-                
-                print('Captcha ERRADA!')
+            tm(3)
+            
+            try:
+                self.driver.find_element_by_xpath('/html/body/div[1]/div/div[1]/div[2]/div[2]/div/div/div/div/div/h4')
                 self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/Autentica.aspx?id=60')
                 tm(2)
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCNPJ').send_keys(self.cnpj)
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCPFResponsavel').send_keys(self.cpf)
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.code)
+            except:
+                break    
                 
                 
-        
             
+    def Downloads(self,ano,init,final):
+
+        self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
+        self.ano = ano
+        tm(2)
         
-        tm(2) 
+        self.driver.find_element_by_id('ano').send_keys(self.ano)
         self.driver.find_element_by_xpath('/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/div[1]/form/div/button').click()
         tm(3)
-
-    def Downloads(self):
         element = None
         buttons = []
         linhas = []
         tempos = self.driver.find_elements_by_class_name('pa')
         k = 0
+        
+        
+        morte = 0
+        
+        if final == 0:
+            
+            morte = len(tempos)
+        else:
+            
+            morte = final
+        
+        
         while(True):
                     
             k=k+1
@@ -149,7 +161,7 @@ class Robo2018():
         buttons.append(element)
         
         
-        for i in range(len(tempos)):
+        for i in range(init,morte):
             
             buttons[i].click()
             
@@ -182,8 +194,7 @@ class Robo2018():
             file.close()
 
             os.remove(self.path+f'{self.raiz}{arquivos[0]}')    
-
-        self.driver.close()
+      
     def quebracaptcha(self):
 
         img = self.driver.find_element_by_id('captcha-img').get_attribute('src')

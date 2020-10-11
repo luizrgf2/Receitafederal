@@ -8,7 +8,7 @@ import base64
 
 class Robot():
 
-    def __init__(self, code, cnpj, cpf, ano,anticaptcha):
+    def __init__(self, code, cnpj, cpf,anticaptcha):
         self.anticaptcha = anticaptcha
         self.raiz = ''
         import platform
@@ -24,7 +24,7 @@ class Robot():
         self.cnpj = cnpj
         self.cpf = cpf
         self.path = os.getcwd()+f'{self.raiz}{self.cnpj}'
-        self.ano = ano
+        self.ano = '2015'
 
         if os.path.isdir(self.path):
 
@@ -37,6 +37,10 @@ class Robot():
         options = webdriver.ChromeOptions() 
         prefs = {'download.default_directory' : f'{self.path}'}
         options.add_experimental_option('prefs', prefs)
+        
+        options.add_argument("--start-maximized")
+        
+        #options.add_argument("--headless")
 
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
 
@@ -79,6 +83,12 @@ class Robot():
                 
 
 
+
+
+    def Downloads(self,ano,init,final):
+        
+        self.ano = ano
+        
         tm(4)
 
         
@@ -90,8 +100,8 @@ class Robot():
         self.driver.find_element_by_xpath('/html/body/div[2]/div[3]/div[1]/div[3]/a[3]').click()
 
         tm(3)
-
-    def Downloads(self):
+        
+        
         i = 0
         tempos = self.driver.find_elements_by_class_name('pa')
         retificacoes = self.driver.find_elements_by_xpath('//*[@tipo="R"]')
@@ -132,8 +142,24 @@ class Robot():
 
         buttons_finals.append(self.driver.find_element_by_xpath(f'/html/body/div[2]/div[3]/div[2]/div[1]/div[1]/div[2]/table[2]/tbody/tr[{len(linhas)}]/td[1]/a'))               
         scroll = 50
-        for i in range(len(buttons_finals)):
+        
+        if final == 0:
+        
+            morte = len(buttons_finals)
+        else:
+            morte= final
+        
 
+        
+        
+        
+        for i in range(init,morte):
+
+            
+
+            self.driver.execute_script(f'var e = document.getElementsByClassName("pa"); e[{init}].scrollIntoView();')
+            
+            
             self.driver.execute_script(f'window.scrollBy(0,{scroll})')
 
             scroll = scroll + 100
@@ -174,7 +200,7 @@ class Robot():
 
             self.driver.execute_script('window.scrollBy(0,50)')
 
-        self.driver.close()
+        
 
     def quebracaptcha(self):
 
@@ -196,9 +222,6 @@ class Robot():
         job.join()
         print(job.get_captcha_text())
         return job.get_captcha_text()
-
-
-
 
 
 
