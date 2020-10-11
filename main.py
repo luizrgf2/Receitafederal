@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 def Escolha(year1,year2,controller,day_init,day_final):
     
-    dif_anual = year2-year1
+    dif_anual = year2-year1+1
     
     ano_atual = year1
     
@@ -24,7 +24,7 @@ def Escolha(year1,year2,controller,day_init,day_final):
     
     inicial = 0
     
-    for i in range(dif_anual+1):
+    for i in range(dif_anual):
         
         
         

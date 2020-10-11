@@ -38,6 +38,7 @@ class Robo2018():
         options = webdriver.ChromeOptions() 
         prefs = {'download.default_directory' : f'{self.path}'}
         options.add_experimental_option('prefs', prefs)
+        options.add_argument("--headless")
 
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
 
