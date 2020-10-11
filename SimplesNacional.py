@@ -40,7 +40,7 @@ class Robot():
         
         options.add_argument("--start-maximized")
         
-        #options.add_argument("--headless")
+        options.add_argument("--headless")
 
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
 
