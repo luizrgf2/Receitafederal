@@ -29,9 +29,9 @@ Para o windows é necessário baixar o python direto do site oficial e manter o 
  
  
 
-python main.py Password Cnpj Cpf Antcaptcha Ano_inicio Dia_inicio Ano_final Dia_final 
+python main.py Password|Cnpj|Cpf|Antcaptcha|Ano_inicio|dia_inicio|Ano_final|Dia_final|visisvel 
 
- 
+
  
 
 exemplo: 
@@ -39,4 +39,4 @@ exemplo:
  
  
 
-python main.py 337563864600 00448750000120 60087846934 True 2018 6 2018 8 
+python main.py 337563864600 00448750000120 60087846934 True 2018 6 2018 8 True
