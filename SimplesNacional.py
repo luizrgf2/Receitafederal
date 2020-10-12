@@ -49,6 +49,10 @@ class Robot():
 
         tm(3)
 
+        self.verificacao()
+
+        tm(2)
+
     def acess(self):
 
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCNPJ').send_keys(self.cnpj)
@@ -105,7 +109,6 @@ class Robot():
         
         i = 0
         tempos = self.driver.find_elements_by_class_name('pa')
-        retificacoes = self.driver.find_elements_by_xpath('//*[@tipo="R"]')
         linhas = []
         buttons_finals = []
 
@@ -223,7 +226,17 @@ class Robot():
         job.join()
         print(job.get_captcha_text())
         return job.get_captcha_text()
+    def verificacao(self):
 
+        try:
+
+            self.driver.find_element_by_id('details-button').click()
+            tm(2)
+            self.driver.find_element_by_xpath('/html/body/div/div[3]/p[2]/a').click()
+
+        except:
+
+            return
 
 
 

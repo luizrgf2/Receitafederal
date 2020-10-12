@@ -24,7 +24,7 @@ class Robo2018():
         self.code = code
         self.cnpj = cnpj
         self.cpf = cpf
-        self.path = os.getcwd()+f'{self.raiz}{self.cnpj}'
+        self.path = os.getcwd()+f'{self.raiz}'+f'{self.cnpj}'
         self.ano = '2015'
 
         if os.path.isdir(self.path):
@@ -46,6 +46,10 @@ class Robo2018():
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/Autentica.aspx?id=60')
 
         tm(3)
+
+        self.verificacao()
+
+        tm(2)
 
     def acess(self):
         tm(3)
@@ -94,9 +98,7 @@ class Robo2018():
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.code)
             except:
                 break    
-                
-                
-            
+                       
     def Downloads(self,ano,init,final):
 
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
@@ -228,3 +230,14 @@ class Robo2018():
         print(job.get_captcha_text())
         return job.get_captcha_text()
 
+    def verificacao(self):
+
+        try:
+
+            self.driver.find_element_by_id('details-button').click()
+            tm(2)
+            self.driver.find_element_by_xpath('/html/body/div/div[3]/p[2]/a').click()
+
+        except:
+
+            return
