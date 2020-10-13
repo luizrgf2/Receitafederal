@@ -69,9 +69,11 @@ class Robo2018():
                     self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
                     self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
                 except:
-
+                    self.anticapcha = False
                     print('Não existe saldo para o uso do antcaptcha!')
-                    self.anticapcha == False
+                    
+                    
+                    
                     
                     
             elif self.anticapcha == False:
@@ -210,9 +212,6 @@ class Robo2018():
             os.remove(self.path+f'{self.raiz}{arquivos[0]}')    
       
     def quebracaptcha(self):
-
-
-        
 
         img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
 

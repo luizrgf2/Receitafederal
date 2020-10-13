@@ -18,8 +18,6 @@ class Robot():
             self.raiz = '\\'
             
         else:
-
-            
             
             self.raiz = '/'
             
