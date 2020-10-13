@@ -76,7 +76,7 @@ class Robot():
 
                         print('Não existe saldo para o uso do antcaptcha!')
                         self.anticaptcha = False
-                        sys.exit()
+                        self.driver.find_element_by_class_name('wdw')
 
                 elif self.anticaptcha == False:
                     self.get_image()
@@ -93,6 +93,10 @@ class Robot():
             except:
                 print('Captcha ERRADA!')
                 tm(2)
+                self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/Autentica.aspx?id=6')
+                tm(2)
+                self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCNPJ').send_keys(self.cnpj)
+                self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCPFResponsavel').send_keys(self.cpf)
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.code)
                 
 

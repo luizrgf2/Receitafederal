@@ -72,7 +72,7 @@ class Robo2018():
 
                     print('Não existe saldo para o uso do antcaptcha!')
                     self.anticapcha == False
-                    sys.exit()
+                    
                     
             elif self.anticapcha == False:
                 
