@@ -4,6 +4,7 @@ from time import sleep as tm
 import os
 from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import base64
+import sys
 
 
 class Robot():
@@ -42,6 +43,7 @@ class Robot():
         
         if visivel == False:
             options.add_argument("--headless")
+        options.add_argument('ignore-certificate-errors')
 
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
 
@@ -64,22 +66,29 @@ class Robot():
         while(True):
             try:
                 if self.anticaptcha == True:
-                    
-                    self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
-                    self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
-                    tm(3)
-
-                    self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/ul/li[6]/a/span').click()
-                    
-                elif self.anticaptcha == False:
-                    
-                    a= input('Digite o captcha e depois digite [c = continuar]!\n')
-                    if a == 'c' or a == 'C':
-
+                    try:
+                        self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
                         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
                         tm(3)
 
                         self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/ul/li[6]/a/span').click()
+                    except:
+
+                        print('Não existe saldo para o uso do antcaptcha!')
+                        self.anticaptcha = False
+                        sys.exit()
+
+                elif self.anticaptcha == False:
+                    self.get_image()
+                    a= input('Digite o captcha, existe uma imagem na pasta do script referente ao captcha! :')
+                    
+                    self.driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div[2]/div[1]/div/div[2]/input').send_keys(a)
+                    self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                    tm(2)
+                    self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/default.aspx')
+                    tm(3)
+
+                    self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/ul/li[6]/a/span').click()
                 break
             except:
                 print('Captcha ERRADA!')
@@ -208,18 +217,10 @@ class Robot():
 
     def quebracaptcha(self):
 
-        img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
 
-        image_base64 = img.split('data:image/png;base64,')[1]
-
-        base64_img = image_base64.encode('utf-8')
-
-         
-
-        open('image.png','wb').write(base64.decodebytes(base64_img))
 
         api_key = 'fc123745c9de9f98a08ae253ea3dc226'
-        captcha_fp = open('image.png', 'rb')
+        captcha_fp = self.get_image()
         client = AnticaptchaClient(api_key)
         task = ImageToTextTask(captcha_fp)
         job = client.createTask(task)
@@ -238,6 +239,19 @@ class Robot():
 
             return
 
+    def get_image(self):
+
+
+        img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
+
+        image_base64 = img.split('data:image/png;base64,')[1]
+
+        base64_img = image_base64.encode('utf-8')
+
+         
+
+        open('image.png','wb').write(base64.decodebytes(base64_img))
+        return open('image.png','rb')
 
 
 

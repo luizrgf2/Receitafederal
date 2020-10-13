@@ -4,6 +4,7 @@ from time import sleep as tm
 import os
 from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import base64
+import sys
 
 
 
@@ -40,6 +41,7 @@ class Robo2018():
         options.add_experimental_option('prefs', prefs)
         if visivel == False:
             options.add_argument("--headless")
+        options.add_argument('ignore-certificate-errors')
 
         self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
 
@@ -63,27 +65,25 @@ class Robo2018():
         while(True):
         
             if self.anticapcha == True:
-                
-                self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
-                self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                try:
+                    self.driver.find_element_by_id('txtTexto_captcha_serpro_gov_br').send_keys(self.quebracaptcha())
+                    self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                except:
+
+                    print('Não existe saldo para o uso do antcaptcha!')
+                    self.anticapcha == False
+                    sys.exit()
                     
             elif self.anticapcha == False:
-                img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
-
-                image_base64 = img.split('data:image/png;base64,')[1]
-
-                base64_img = image_base64.encode('utf-8')
-
-         
-
-                open('image.png','wb').write(base64.decodebytes(base64_img))
                 
-                    
-                a= input('Digite o recaptcha e depois digite [c = continuar]!\n')
-                if a == 'c' or a == 'C':
+                self.get_image()
+                             
+                a= input('Digite o captcha, existe uma imagem na pasta do script referente ao captcha! :')
+                
+                self.driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div[2]/div[1]/div/div[2]/input').send_keys(a)
 
-                    self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
-                    tm(2)
+                self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                tm(2)
 
             self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
                 
@@ -241,3 +241,18 @@ class Robo2018():
         except:
 
             return
+    def get_image(self):
+
+
+        img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
+
+        image_base64 = img.split('data:image/png;base64,')[1]
+
+        base64_img = image_base64.encode('utf-8')
+
+         
+
+        open('image.png','wb').write(base64.decodebytes(base64_img))
+        return open('image.png','rb')
+
+

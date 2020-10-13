@@ -29,7 +29,7 @@ Para o windows é necessário baixar o python direto do site oficial e manter o 
  
  
 
-python main.py Password|Cnpj|Cpf|Antcaptcha|Ano_inicio|dia_inicio|Ano_final|Dia_final|visisvel 
+python main.py Password|Cnpj|Cpf|Antcaptcha|Ano_inicio|dia_inicio|Ano_final|Dia_final|visisvel
 
 
  
