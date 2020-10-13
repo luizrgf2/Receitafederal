@@ -211,6 +211,9 @@ class Robo2018():
       
     def quebracaptcha(self):
 
+
+        
+
         img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
 
         image_base64 = img.split('data:image/png;base64,')[1]
