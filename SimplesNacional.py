@@ -5,6 +5,7 @@ import os
 from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import base64
 import sys
+import json
 
 
 class Robot():
@@ -80,10 +81,11 @@ class Robot():
 
                 elif self.anticaptcha == False:
                     self.get_image()
-                    a= input('Digite o captcha, existe uma imagem na pasta do script referente ao captcha! :')
                     
-                    self.driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div[2]/div[1]/div/div[2]/input').send_keys(a)
+                    
+                    self.driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div[2]/div[1]/div/div[2]/input').send_keys(self.get_json())
                     self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
+                    os.remove(self.path+f'{self.raiz}cap.json')
                     tm(2)
                     self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/default.aspx')
                     tm(3)
@@ -254,9 +256,23 @@ class Robot():
 
          
 
-        open('image.png','wb').write(base64.decodebytes(base64_img))
-        return open('image.png','rb')
+        open(f'{self.path}{self.raiz}image.png','wb').write(base64.decodebytes(base64_img))
+        return open(f'{self.path}{self.raiz}image.png','rb')
+        
 
 
+    def get_json(self):
 
+        while(True):
+
+            try:
+
+                file = open(f'{self.path}{self.raiz}cap.json','r')
+                break
+            except:
+
+                print('Aguardando!....')
+                tm(3)
+        dados = json.load(file)
+        return dados['cap']
 

@@ -5,6 +5,7 @@ import os
 from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import base64
 import sys
+import json
 
 
 
@@ -80,9 +81,11 @@ class Robo2018():
                 
                 self.get_image()
                              
-                a= input('Digite o captcha, existe uma imagem na pasta do script referente ao captcha! :')
                 
-                self.driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div[2]/div[1]/div/div[2]/input').send_keys(a)
+                
+                self.driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div[2]/div[1]/div/div[2]/input').send_keys(self.get_json())
+
+                os.remove(self.path+f'{self.raiz}cap.json')
 
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$btContinuar').click()
                 tm(2)
@@ -99,6 +102,7 @@ class Robo2018():
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCPFResponsavel').send_keys(self.cpf)
                 self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.code)
             except:
+                print('Captcha errada!')
                 break    
                        
     def Downloads(self,ano,init,final):
@@ -213,18 +217,10 @@ class Robo2018():
       
     def quebracaptcha(self):
 
-        img = self.driver.find_element_by_id('captcha-img').get_attribute('src')
 
-        image_base64 = img.split('data:image/png;base64,')[1]
-
-        base64_img = image_base64.encode('utf-8')
-
-         
-
-        open('image.png','wb').write(base64.decodebytes(base64_img))
 
         api_key = 'fc123745c9de9f98a08ae253ea3dc226'
-        captcha_fp = open('image.png', 'rb')
+        captcha_fp = self.get_image()
         client = AnticaptchaClient(api_key)
         task = ImageToTextTask(captcha_fp)
         job = client.createTask(task)
@@ -254,7 +250,20 @@ class Robo2018():
 
          
 
-        open('image.png','wb').write(base64.decodebytes(base64_img))
-        return open('image.png','rb')
+        open(f'{self.path}{self.raiz}image.png','wb').write(base64.decodebytes(base64_img))
+        return open(f'{self.path}{self.raiz}image.png','rb')
 
+    def get_json(self):
 
+        while(True):
+
+            try:
+
+                file = open(f'{self.path}{self.raiz}cap.json','r')
+                break
+            except:
+
+                print('Aguardando!....')
+                tm(3)
+        dados = json.load(file)
+        return dados['cap']
