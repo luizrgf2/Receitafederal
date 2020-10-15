@@ -44,7 +44,7 @@ class Robo2018():
             options.add_argument("--headless")
         options.add_argument('ignore-certificate-errors')
 
-        self.driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(),chrome_options=options)
+        self.driver = webdriver.Chrome(executable_path=os.getcwd()+self.raiz+'chromedriver',chrome_options=options)
 
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/Autentica.aspx?id=60')
 
