@@ -26,7 +26,7 @@ class Robo2018():
         self.code = code
         self.cnpj = cnpj
         self.cpf = cpf
-        self.path = '/home/pgdas/'+f'{self.cnpj}'
+        self.path = '/home/pgdas'+f'{self.raiz}'+f'{self.cnpj}'
         self.ano = '2015'
 
         if os.path.isdir(self.path):
