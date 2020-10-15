@@ -117,9 +117,14 @@ class Robo2018():
         element = None
         buttons = []
         linhas = []
+        
         tempos = self.driver.find_elements_by_class_name('pa')
         k = 0
         
+        if len(tempos) == 0:
+
+            print('Não existe dados para este ano!')
+            return
         
         morte = 0
         
