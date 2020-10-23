@@ -30,7 +30,7 @@ class Robot():
 
         if os.path.isdir(self.path):
 
-            print('Já existe esse cliente!')
+            print('Ja existe esse cliente!')
 
         else:
 
@@ -45,6 +45,7 @@ class Robot():
         if visivel == False:
             options.add_argument("--headless")
         options.add_argument('ignore-certificate-errors')
+        options.add_argument('--no-sandbox')
 
         self.driver = webdriver.Chrome(executable_path=os.getcwd()+self.raiz+'chromedriver',chrome_options=options)
 
