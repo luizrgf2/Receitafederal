@@ -49,7 +49,7 @@ class Robo2018():
 
         tm(2)
     def Downloads(self,ano,init,final):
-
+        porcentagem_conclusao = 0
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
         self.ano = ano
         tm(2)
@@ -161,7 +161,11 @@ class Robo2018():
 
             file.close()
 
-            os.remove(self.path+f'/{arquivos[0]}')    
+            os.remove(self.path+f'/{arquivos[0]}')
+
+            porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
+            print(porcentagem_conclusao)
+        open(self.path+'/conclusion.txt','w').write(str(porcentagem_conclusao))
     def verificacao(self):
 
         try:

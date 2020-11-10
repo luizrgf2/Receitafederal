@@ -47,6 +47,7 @@ class Robot():
 
         tm(2)
     def Downloads(self,ano,init,final):
+        porcentagem_conclusao = 0
         
         self.ano = ano
         
@@ -160,7 +161,10 @@ class Robot():
 
             os.remove(self.path+f'/{arquivos[0]}')
 
-            self.driver.execute_script('window.scrollBy(0,50)')       
+            self.driver.execute_script('window.scrollBy(0,50)')
+            porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
+            print(porcentagem_conclusao)
+        open(self.path+'/conclusion.txt','w').write(str(porcentagem_conclusao))       
     def verificacao(self):
 
         try:
