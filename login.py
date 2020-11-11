@@ -89,7 +89,7 @@ class Login():
                 tm(2)
                 self.driver.find_element_by_xpath('/html/body/form/div[3]/div[2]/div[2]/div[1]/div[1]/div[3]/input').click()
                 
-
+            self.get_element_error_login()
                     
 
         tm(4)
@@ -132,8 +132,59 @@ class Login():
             except:
 
                 print('Aguardando!....')
-                tm(3)
+                tm(3) 
+                
+
+
+
         dados = json.load(file)['cap']
         os.remove(f'{self.path}/cap.json')
         return dados
+    def get_element_error_login(self):
+        import sys
+        file_log = None
+        try:
+            element_error = self.driver.execute_script('var a = document.getElementsByClassName("label erro"); return a[0].innerText;')
+            print(element_error)
+            if element_error == 'Caracteres anti-robô inválidos. Tente novamente.':
+                element_error = 'Captcha errado!'
+            elif element_error == 'Número de CNPJ fornecido não cadastrado no CNPJ':
+                element_error = 'CNPJ fornecido nao cadastrado no CNPJ!'
+                
+                
+            elif element_error == 'CPF inválido não cadastrado na base CPF':
+                element_error = 'CPF invalido!'
+                
+            elif element_error == 'Código de acesso deve ser informado com 12 dígitos':
+                element_error = 'Codigo de acesso deve ser informado com 12 dígitos'
+                
+            elif element_error.find('Código de acesso inválido')!= -1:
+                print(element_error)
+                element_error = 'Codigo de acesso invalido'
+                
+
+
+            file_log = open(self.path+'/log.json','r')
+            dados = json.loads(file_log.read())
+            dados['login_error'] = element_error
+            data = json.dumps(dados,indent=4)
+            open(self.path+'/log.json','w',-1, "utf-8").write(data)
+
+        except Exception as e:
+            if str(e).find('Message: javascript error: Cannot read property') != -1:
+                print('')
+            if str(e).find('[Errno 2] No such file or directory:') != -1:
+
+                dados = {
+
+                    "progress":0,
+                    "login_error":element_error,
+                    "pgdas":None
+
+
+                }
+                data = json.dumps(dados,indent=4)
+                open(self.path+'/log.json','w',-1, "utf-8").write(data)
+
+            
 

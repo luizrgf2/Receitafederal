@@ -165,7 +165,7 @@ class Robo2018():
 
             porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
             print(porcentagem_conclusao)
-        open(self.path+'/conclusion.txt','w').write(str(porcentagem_conclusao))
+            open(self.path+'/conclusion.txt','w').write(str(porcentagem_conclusao))
     def verificacao(self):
 
         try:
