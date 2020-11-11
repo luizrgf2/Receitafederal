@@ -50,6 +50,15 @@ class Robo2018():
         tm(2)
     def Downloads(self,ano,init,final):
         porcentagem_conclusao = 0
+
+
+
+
+        file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
+        file_json['progress'] = porcentagem_conclusao
+        data = json.dumps(file_json,indent=4)
+        open(self.cnpj+"/log.json",'w').write(data)
+
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
         self.ano = ano
         tm(2)
@@ -66,9 +75,20 @@ class Robo2018():
         
         if len(tempos) == 0:
 
-            print('Não existe dados para este ano!')
+            print('Nao existe dados para este ano!')
+            file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
+            file_json['pgdas'] = "Nao existe dados para este ano!"
+            data = json.dumps(file_json,indent=4)
+            open(self.cnpj+"/log.json",'w').write(data)
             return
-        
+        else:
+
+            
+            file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
+            file_json['pgdas'] = None
+            data = json.dumps(file_json,indent=4)
+            open(self.cnpj+"/log.json",'w').write(data)
+            
         morte = 0
         
         if final == 0:
@@ -165,7 +185,12 @@ class Robo2018():
 
             porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
             print(porcentagem_conclusao)
-            open(self.path+'/conclusion.txt','w').write(str(porcentagem_conclusao))
+            
+            file_json = open(self.cnpj+'/log.json','r').read()
+            data = json.loads(file_json)
+            data['progress'] = porcentagem_conclusao
+            dates = json.dumps(data,indent=4)
+            open(self.cnpj+'/log.json','w').write(dates)
     def verificacao(self):
 
         try:

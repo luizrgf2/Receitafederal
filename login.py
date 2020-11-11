@@ -6,6 +6,7 @@ from python_anticaptcha import AnticaptchaClient, ImageToTextTask
 import os
 from time import sleep as tm
 import base64
+from pathlib import Path
 
 class Login():
 
@@ -150,7 +151,14 @@ class Login():
                 element_error = 'Captcha errado!'
             elif element_error == 'Número de CNPJ fornecido não cadastrado no CNPJ':
                 element_error = 'CNPJ fornecido nao cadastrado no CNPJ!'
-                
+                file_log = open(self.path+'/log.json','r')
+                dados = json.loads(file_log.read())
+                dados['login_error'] = element_error
+                data = json.dumps(dados,indent=4)
+                open(self.path+'/log.json','w',-1, "utf-8").write(data)
+                dir = Path(self.path)
+                dir.rmdir()
+                sys.exit()
                 
             elif element_error == 'CPF inválido não cadastrado na base CPF':
                 element_error = 'CPF invalido!'
@@ -172,7 +180,25 @@ class Login():
 
         except Exception as e:
             if str(e).find('Message: javascript error: Cannot read property') != -1:
-                print('')
+                try:
+                    file_json = open(self.path+'/log.json','r').read()
+                    data = json.loads(file_json)
+                    data['login_error'] = 'Sucesso'
+                    dates = json.dumps(data,indent=4)
+                    open(self.path+'/log.json','w').write(dates)
+                except:
+                    dicts = {
+
+                        "progress": 0,
+                        "login_error": 'Sucesso',
+                        "pgdas": None
+                    }
+                    dates = json.dumps(dicts,indent=4)
+                    open(self.path+'/log.json','w').write(dates)
+
+
+
+                    
             if str(e).find('[Errno 2] No such file or directory:') != -1:
 
                 dados = {

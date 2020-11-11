@@ -48,10 +48,21 @@ class Robot():
         tm(2)
     def Downloads(self,ano,init,final):
         porcentagem_conclusao = 0
+
+        file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
+        file_json['progress'] = porcentagem_conclusao
+        data = json.dumps(file_json,indent=4)
+        open(self.cnpj+"/log.json",'w').write(data)
+
+
+        file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
+        file_json['pgdas'] = None
+        data = json.dumps(file_json,indent=4)
+        open(self.cnpj+"/log.json",'w').write(data)
         
         self.ano = ano
         
-        tm(4)
+        tm(2)
 
         self.driver.find_element_by_xpath('/html/body/div[2]/div[2]/ul/li[6]/a/span').click()
 
@@ -59,11 +70,11 @@ class Robot():
 
         self.driver.find_element_by_xpath('/html/body/div[2]/div[3]/div[1]/div[2]/div[1]/input').send_keys(self.ano)
 
-        tm(3)
+        tm(2)
         
         self.driver.find_element_by_xpath('/html/body/div[2]/div[3]/div[1]/div[3]/a[3]').click()
 
-        tm(3)
+        tm(2)
         
         
         i = 0
@@ -131,7 +142,7 @@ class Robot():
 
             buttons_finals[i].click()
 
-            tm(4)
+            tm(2)
 
             arquivos = [_ for _ in os.listdir(self.path) if _.endswith(r'.pdf')]
 
@@ -164,7 +175,11 @@ class Robot():
             self.driver.execute_script('window.scrollBy(0,50)')
             porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
             print(porcentagem_conclusao)
-            open(self.path+'/conclusion.txt','w').write(str(porcentagem_conclusao))       
+            file_json = open(self.cnpj+'/log.json','r').read()
+            data = json.loads(file_json)
+            data['progress'] = porcentagem_conclusao
+            dates = json.dumps(data,indent=4)
+            open(self.cnpj+'/log.json','w').write(dates)      
     def verificacao(self):
 
         try:
