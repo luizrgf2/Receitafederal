@@ -1,0 +1,61 @@
+[
+    {
+        "domain": "www8.receita.fazenda.gov.br",
+        "httpOnly": true,
+        "name": "sessao-pgdasd",
+        "path": "/",
+        "secure": false,
+        "value": "UqCulUBej55nf0X-3qCbuEGf6GGJVP7PIkzy8cljs5U3yZtEvfG85mYF5N-SALv6eupm7MbGnLB1cMmtS3uAlhdUuMNrDMNCPEJJ8tpFDMTXG4L6hRPdFeF89KHXf8JjXTMml4cpS3L0Tu1sCuAnC_GwhFeW64aOaBvgu3k8ZKIGNK60DlgEbtfMMaLaZVjKWoaHAkwqIvUx-hvO_vCEB9q_MiG_o8_IW6UDE_l36ibmIPwuLdqFaWGgwH8GW70XkTP4QCSTXDLvAmCmbPguSMVO3pN_8QoG-9wkk-72xz8880zxU8v2BkRH40Ooo65Pdv71kv71SE1ywWoTAsGE551B9c7yu8XMSd10tcKrNcbvy6K-dzyMqqw-zKJ9bu07rt86_0ymH2gzdEhIk26lB285_xiqw3hh8TU4Sg-20k03tOpdRbyI-e0K3ncuXivW3cbgL4UAYzHyWfYkgv_DiN8tSYdoSxtByKTZ16x6o3aTvNOROyH6nmglprKWOyxET4kLo1ym1ePGhVWy2nBNhUnciIW8vnMpvrdp51H2CcNXBKQQFIPa9RjwLz-z_w_D-__B7ZLGyG1RwWLnNbELsOf3p9g80gw_5Gp_orrv6F1gwE5jdi_cnepSE6jBMl4oGpOSJeYsXX4wwBCGssFDyBkxJRTuEEYIzAX0HeLZyFU1"
+    },
+    {
+        "domain": "www8.receita.fazenda.gov.br",
+        "httpOnly": true,
+        "name": "ASP.NET_SessionId",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false,
+        "value": "i1agrhaeo5eh2dnwabou3clg"
+    },
+    {
+        "domain": ".www8.receita.fazenda.gov.br",
+        "httpOnly": false,
+        "name": "cookieAcessoPJ",
+        "path": "/",
+        "secure": true,
+        "value": "vF2f1G9cisNdOQaLx9Fu1OPHgILCUbYvhcHJuaTXLiKflOCvopaSUDdSTYI7mEf03BzlPZpWUbbAoax9gWmTWB8tqRrsnLT20K+6fVT9Ly72CNdF/n5A1Ikb7pKUXiu4CeegiIiTAI2D3ZXynS6HJFb8Zwy2kHGFgTfbUny4dGNCcw2H5dai5WeZW+fEsX5zVvG6UGKb5PYXoVLWm0XcZBkSoiUzjGkWGifjnDfoT550BhqB7FBnUXuJxEAybcgO9FNVTQIVJMBn/6SjeOMhq2NwT8jZyQYrYBtK4PN8IbF+n3bqsraCOF9f+Lj4UdvFQKLvl9GQPuuW13KJwt43cEcfEXPabxlA4jBNcle+ylApvZEkdh9n+6rOlvfZyyDj"
+    },
+    {
+        "domain": ".www8.receita.fazenda.gov.br",
+        "expiry": 1607124231,
+        "httpOnly": false,
+        "name": "sinac.urlRedirecionamento",
+        "path": "/",
+        "secure": true,
+        "value": "/simplesnacional/aplicacoes/atspo/pgdasd2018.app/"
+    },
+    {
+        "domain": ".www8.receita.fazenda.gov.br",
+        "httpOnly": false,
+        "name": "cookieAcessoPJValidade",
+        "path": "/",
+        "secure": true,
+        "value": "a796d330ef65b97911cab345023305b5"
+    },
+    {
+        "domain": ".www8.receita.fazenda.gov.br",
+        "httpOnly": false,
+        "name": "ARRAffinity",
+        "path": "/",
+        "secure": true,
+        "value": "226ebe799f82d8e72ebf546f5eb00344e3ec28afafa7b0f55b6a93485300e1d6"
+    },
+    {
+        "domain": ".www8.receita.fazenda.gov.br",
+        "expiry": 1607124231,
+        "httpOnly": false,
+        "name": "sinac.quantidadeMensagens",
+        "path": "/",
+        "secure": true,
+        "value": "2"
+    }
+]

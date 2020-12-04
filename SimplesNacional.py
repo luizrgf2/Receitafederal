@@ -6,7 +6,10 @@ import base64
 import sys
 import json
 import pickle
-
+import requests
+import glob
+import stractor
+import _thread
 
 class Robot():
 
@@ -15,7 +18,7 @@ class Robot():
         self.code = code
         self.cnpj = cnpj
         self.cpf = cpf
-        self.path = os.getcwd()+f'/{self.cnpj}'
+        self.path = os.getcwd()+self.detect_plataform()+f'{self.cnpj}'
         self.ano = '2015'
 
 
@@ -29,13 +32,21 @@ class Robot():
             options.add_argument("--headless")
         options.add_argument('ignore-certificate-errors')
         options.add_argument('--no-sandbox')
+        
+        import platform
 
-        self.driver = webdriver.Chrome(executable_path=os.getcwd()+'/'+'chromedriver',chrome_options=options)
+        if platform.system() == 'Linux':
+
+            self.driver = webdriver.Chrome(executable_path=os.getcwd()+self.detect_plataform()+'chromedriver',chrome_options=options)
+        else:
+            self.driver = webdriver.Chrome(executable_path=os.getcwd()+self.detect_plataform()+'chromedriver.exe',chrome_options=options)
+
+
 
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/Autentica.aspx?id=6')
 
         tm(1)
-        cookies = pickle.load(open(f"{self.path}/cookies.pkl", "rb"))
+        cookies = pickle.load(open(f"{self.path}"+self.detect_plataform()+"cookies.pkl", "rb"))
         for cookie in cookies:
             self.driver.add_cookie(cookie)
         tm(3)
@@ -49,16 +60,17 @@ class Robot():
     def Downloads(self,ano,init,final):
         porcentagem_conclusao = 0
 
-        file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
+        file_json = json.loads(open(self.cnpj+self.detect_plataform()+"log.json",'r').read())
         file_json['progress'] = porcentagem_conclusao
         data = json.dumps(file_json,indent=4)
-        open(self.cnpj+"/log.json",'w').write(data)
+        open(self.cnpj+self.detect_plataform()+"log.json",'w').write(data)
+        arquivos = []
 
 
-        file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
+        file_json = json.loads(open(self.cnpj+self.detect_plataform()+"log.json",'r').read())
         file_json['pgdas'] = None
         data = json.dumps(file_json,indent=4)
-        open(self.cnpj+"/log.json",'w').write(data)
+        open(self.cnpj+self.detect_plataform()+"log.json",'w').write(data)
         
         self.ano = ano
         
@@ -140,46 +152,70 @@ class Robot():
 
             tm(1)
 
-            buttons_finals[i].click()
+            cookies = self.driver.get_cookies()
+            print(cookies)
 
-            tm(2)
+            headers = {
 
-            arquivos = [_ for _ in os.listdir(self.path) if _.endswith(r'.pdf')]
 
-            print(arquivos)
+                'Host': 'www8.receita.fazenda.gov.br',
+                'Connection': 'keep-alive',
+                'Cache-Control': 'max-age=0',
+                'Upgrade-Insecure-Requests': '1',
+                'Origin': 'https://www8.receita.fazenda.gov.br',
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                'Sec-Fetch-Site': 'same-origin',
+                'Sec-Fetch-Mode': 'navigate',
+                'Sec-Fetch-User': '?1',
+                'Sec-Fetch-Dest': 'document',
+                'Referer': 'https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/default.aspx',
+                'Accept-Encoding': 'gzip, deflate, br',
+                'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
+                'Cookie':'ARRAffinity='+cookies[5]['value']+'; '+'cookieAcessoPJ='+cookies[1]['value']+'; '+'cookieAcessoPJValidade='+cookies[3]['value']+'; '+'sinac.quantidadeMensagens=2; '+'sinac.urlRedirecionamento=/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/default.aspx; '+'ASP.NET_SessionId='+cookies[0]['value']
+                
+
+
+
+            }
+
+            response = requests.post('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/ImprimirApuracao.aspx',headers=headers,data={'idApuracao': buttons_finals[i].text},verify=False)
+            
+            
+
+            
+
+            
 
             texto = tempos[i].text.split('/')
             texto_final = texto[0]+'_'+texto[1]
 
-            if os.path.isdir(self.path+f'/{self.ano}'):
+            if os.path.isdir(self.path+self.detect_plataform()+f'{self.ano}'):
 
                 print('Ja existe o diretorio!!')
 
             else:
 
-                os.mkdir(self.path+f'/{self.ano}')
+                os.mkdir(self.path+self.detect_plataform()+f'{self.ano}')
+  
+            directory = self.path+self.detect_plataform()+f'{self.ano}'+self.detect_plataform()+f'{texto_final}.pdf'
+            open(directory,'wb').write(response.content)
+            
+            stractor.main(texto_final+'.pdf',texto_final,self.cnpj,self.ano,self.path+self.detect_plataform()+f'{self.ano}')
 
             
 
-
-            file = open(self.path+f'/{arquivos[0]}','rb')
-
-            filecreate = open(self.path+f'/{self.ano}/{texto_final}.pdf','wb')
-            filecreate.write(file.read())
-            filecreate.close()
-
-            file.close()
-
-            os.remove(self.path+f'/{arquivos[0]}')
-
+            
+        
             self.driver.execute_script('window.scrollBy(0,50)')
             porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
             print(porcentagem_conclusao)
-            file_json = open(self.cnpj+'/log.json','r').read()
+            file_json = open(self.cnpj+self.detect_plataform()+'log.json','r').read()
             data = json.loads(file_json)
             data['progress'] = porcentagem_conclusao
             dates = json.dumps(data,indent=4)
-            open(self.cnpj+'/log.json','w').write(dates)      
+            open(self.cnpj+self.detect_plataform()+'log.json','w').write(dates)          
     def verificacao(self):
 
         try:
@@ -191,6 +227,13 @@ class Robot():
         except:
 
             return
+    def detect_plataform(self):
 
+        import platform
+
+        if platform.system() == 'Linux':
+            return '/'
+        else:
+            return '\\'
 
 

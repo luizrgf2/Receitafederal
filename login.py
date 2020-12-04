@@ -19,7 +19,7 @@ class Login():
         self.cpf = cpf
         self.cnpj = cnpj
         self.password = password
-        self.path = os.getcwd()+'/'+self.cnpj
+        self.path = os.getcwd()+self.detect_plataform()+self.cnpj
         
         if os.path.isdir(self.path):
 
@@ -39,9 +39,25 @@ class Login():
         options.add_experimental_option('prefs', prefs)
         options.add_argument(cache['driver'][1])
         options.add_argument(cache['driver'][2])
-        self.driver = webdriver.Chrome(executable_path=os.getcwd()+'/'+'chromedriver',chrome_options=options)
+        import platform
+
+        if platform.system() == 'Linux':
+
+            self.driver = webdriver.Chrome(executable_path=os.getcwd()+self.detect_plataform()+'chromedriver',chrome_options=options)
+        else:
+            self.driver = webdriver.Chrome(executable_path=os.getcwd()+self.detect_plataform()+'chromedriver.exe',chrome_options=options)
+
+
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/controleAcesso/Autentica.aspx?id=60')
         tm(3)
+    def detect_plataform(self):
+
+        import platform
+
+        if platform.system() == 'Linux':
+            return '/'
+        else:
+            return '\\'
     def login(self):
 
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCNPJ').send_keys(self.cnpj)
@@ -118,17 +134,17 @@ class Login():
 
          
 
-        open(f'{self.path}/image.png','wb').write(base64.decodebytes(base64_img))
-        return open(f'{self.path}/image.png','rb')
+        open(f'{self.path}'+self.detect_plataform()+'image.png','wb').write(base64.decodebytes(base64_img))
+        return open(f'{self.path}'+self.detect_plataform()+'image.png','rb')
     def saving_session(self):
-        pickle.dump( self.driver.get_cookies() , open(f"{self.path}/cookies.pkl","wb"))   
+        pickle.dump( self.driver.get_cookies() , open(f"{self.path}"+self.detect_plataform()+"cookies.pkl","wb"))   
     def get_json(self):
 
         while(True):
 
             try:
 
-                file = open(f'{self.path}/cap.json','r')
+                file = open(f'{self.path}'+self.detect_plataform()+'cap.json','r')
                 break
             except:
 
@@ -139,7 +155,8 @@ class Login():
 
 
         dados = json.load(file)['cap']
-        os.remove(f'{self.path}/cap.json')
+        file.close()
+        os.remove(f'{self.path}'+self.detect_plataform()+'cap.json')
         return dados
     def get_element_error_login(self):
         import sys
@@ -151,11 +168,11 @@ class Login():
                 element_error = 'Captcha errado!'
             elif element_error == 'Número de CNPJ fornecido não cadastrado no CNPJ':
                 element_error = 'CNPJ fornecido nao cadastrado no CNPJ!'
-                file_log = open(self.path+'/log.json','r')
+                file_log = open(self.path+self.detect_plataform()+'log.json','r')
                 dados = json.loads(file_log.read())
                 dados['login_error'] = element_error
                 data = json.dumps(dados,indent=4)
-                open(self.path+'/log.json','w',-1, "utf-8").write(data)
+                open(self.path+self.detect_plataform()+'log.json','w',-1, "utf-8").write(data)
                 dir = Path(self.path)
                 dir.rmdir()
                 sys.exit()
@@ -172,16 +189,16 @@ class Login():
                 
 
 
-            file_log = open(self.path+'/log.json','r')
+            file_log = open(self.path+self.detect_plataform()+'log.json','r')
             dados = json.loads(file_log.read())
             dados['login_error'] = element_error
             data = json.dumps(dados,indent=4)
-            open(self.path+'/log.json','w',-1, "utf-8").write(data)
+            open(self.path+self.detect_plataform()+'log.json','w',-1, "utf-8").write(data)
 
         except Exception as e:
             if str(e).find('Message: javascript error: Cannot read property') != -1:
                 try:
-                    file_json = open(self.path+'/log.json','r').read()
+                    file_json = open(self.path+self.detect_plataform()+'log.json','r').read()
                     data = json.loads(file_json)
                     data['login_error'] = 'Sucesso'
                     dates = json.dumps(data,indent=4)
@@ -194,7 +211,7 @@ class Login():
                         "pgdas": None
                     }
                     dates = json.dumps(dicts,indent=4)
-                    open(self.path+'/log.json','w').write(dates)
+                    open(self.path+self.detect_plataform()+'log.json','w').write(dates)
 
 
 
@@ -210,7 +227,7 @@ class Login():
 
                 }
                 data = json.dumps(dados,indent=4)
-                open(self.path+'/log.json','w',-1, "utf-8").write(data)
+                open(self.path+self.detect_plataform()+'log.json','w',-1, "utf-8").write(data)
 
             
 
