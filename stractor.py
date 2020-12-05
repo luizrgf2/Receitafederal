@@ -297,18 +297,6 @@ def get_total_receita_bruta(text:str):
 
         
     return receita_bruta
-
-
-
-        
-       
-
-
-
-
-
-
-
 def main(name_file,name_file_out,cnpj,data_init,path):
     data = datetime.datetime.now().year
     transfrom_cnpj = cnpj
