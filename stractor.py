@@ -18,7 +18,9 @@ def get_plataform():
 def get_text_from_file(name_file:str,path:str):
     
     chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless") 
+    chrome_options.add_argument("--headless")
+    options.add_argument('ignore-certificate-errors')
+    options.add_argument('--no-sandbox')
     driver = webdriver.Chrome(chrome_options=chrome_options)
     driver.get('https://www.aconvert.com/pdf/pdf-to-txt/#')
     while True:
