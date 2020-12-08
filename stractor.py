@@ -271,10 +271,7 @@ def get_total_receita_bruta(text:str):
     mes_ap = int(string_data_apuracao.split('/')[0])
 
     if ano_init == ano_ap:
-        if mes_ap> mes_init and mes_init+1 == mes_ap:
-            receita_bruta = text_cnpj.split('(RBT12p)')[1].strip(' ').split(' ')[0]
-        if mes_ap> mes_init and mes_init+1:
-            receita_bruta = text_cnpj.split('(RBA)')[1].strip(' ').split(' ')[0]
+        receita_bruta = text_cnpj.split('(RBT12p)')[1].strip(' ').split(' ')[0]
     elif ano_init+1 == ano_ap:
 
         value_in_meses = (12 - mes_init)+mes_ap
@@ -282,13 +279,16 @@ def get_total_receita_bruta(text:str):
 
         if value_in_meses >= 13:
             receita_bruta = text_cnpj.split('(RBT12)')[1].strip(' ').split(' ')[0]
-            print(receita_bruta)
-        elif value_in_meses == 2:
-            receita_bruta = text_cnpj.split('(RBA)')[1].strip(' ').split(' ')[0]
+            
         else:
             receita_bruta = text_cnpj.split('(RBT12p)')[1].strip(' ').split(' ')[0]
-    elif ano_init+1 < ano_ap:
+
+    elif ano_init+1<ano_ap:
         receita_bruta = text_cnpj.split('(RBT12)')[1].strip(' ').split(' ')[0]
+
+
+        
+
             
 
 
