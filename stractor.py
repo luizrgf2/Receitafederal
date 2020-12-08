@@ -1,5 +1,4 @@
 from selenium import webdriver
-import undetected_chromedriver
 import os
 from time import sleep as tm
 import requests
@@ -19,9 +18,19 @@ def get_text_from_file(name_file:str,path:str):
     
     chrome_options = webdriver.ChromeOptions()
     chrome_options.add_argument("--headless")
-    options.add_argument('ignore-certificate-errors')
-    options.add_argument('--no-sandbox')
-    driver = webdriver.Chrome(chrome_options=chrome_options)
+    chrome_options.add_argument('ignore-certificate-errors')
+    chrome_options.add_argument('--no-sandbox')
+    import platform
+
+    if platform.system() == 'Linux':
+
+        driver = webdriver.Chrome(executable_path=os.getcwd()+get_plataform()+'chromedriver',chrome_options=chrome_options)
+    else:
+        
+        driver = webdriver.Chrome(executable_path=os.getcwd()+get_plataform()+'chromedriver.exe',chrome_options=chrome_options)
+        
+
+
     driver.get('https://www.aconvert.com/pdf/pdf-to-txt/#')
     while True:
         try:
