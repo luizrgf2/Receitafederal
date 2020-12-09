@@ -187,10 +187,12 @@ class Robot():
 
             response = requests.post('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/ImprimirApuracao.aspx',headers=headers,data={'idApuracao': buttons_finals[i].text},verify=False)
             
-            print(response.text)
+            
 
             
 
+            print('testing')
+            
             
 
             texto = tempos[i].text.split('/')
@@ -203,13 +205,16 @@ class Robot():
             else:
 
                 os.mkdir(self.path+self.detect_plataform()+f'{self.ano}')
-  
+            print('testing2')
+
             directory = self.path+self.detect_plataform()+f'{self.ano}'+self.detect_plataform()+f'{texto_final}.pdf'
             open(directory,'wb').write(response.content)
             
+            print('apos a requisicao')
+
             stractor.main(texto_final+'.pdf',texto_final,self.cnpj,self.ano,self.path+self.detect_plataform()+f'{self.ano}')
 
-            
+            print('apos a requisicao1')
 
             
         
@@ -220,7 +225,9 @@ class Robot():
             data = json.loads(file_json)
             data['progress'] = porcentagem_conclusao
             dates = json.dumps(data,indent=4)
-            open(self.cnpj+self.detect_plataform()+'log.json','w').write(dates)          
+            open(self.cnpj+self.detect_plataform()+'log.json','w').write(dates)
+            print('apos a requisicao2')
+
     def verificacao(self):
 
         try:
