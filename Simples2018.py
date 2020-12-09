@@ -64,10 +64,10 @@ class Robo2018():
 
 
 
-        file_json = json.loads(open(self.cnpj+self.detect_plataform()+"log.json",'r').read())
+        file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
         file_json['progress'] = porcentagem_conclusao
         data = json.dumps(file_json,indent=4)
-        open(self.cnpj+self.detect_plataform()+"log.json",'w').write(data)
+        open(self.cnpj+"/log.json",'w').write(data)
 
         self.driver.get('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd2018.app/Consulta')
         self.ano = ano
@@ -86,18 +86,18 @@ class Robo2018():
         if len(tempos) == 0:
 
             print('Nao existe dados para este ano!')
-            file_json = json.loads(open(self.cnpj+self.detect_plataform()+"log.json",'r').read())
+            file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
             file_json['pgdas'] = "Nao existe dados para este ano!"
             data = json.dumps(file_json,indent=4)
-            open(self.cnpj+self.detect_plataform()+"log.json",'w').write(data)
+            open(self.cnpj+"/log.json",'w').write(data)
             return
         else:
 
             
-            file_json = json.loads(open(self.cnpj+self.detect_plataform()+"log.json",'r').read())
+            file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
             file_json['pgdas'] = None
             data = json.dumps(file_json,indent=4)
-            open(self.cnpj+self.detect_plataform()+"log.json",'w').write(data)
+            open(self.cnpj+"/log.json",'w').write(data)
             
         morte = 0
         
@@ -142,8 +142,7 @@ class Robo2018():
                 
                 try:
                     
-                    element = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div[1]/table/tbody/tr[{count}]/td[5]/a')
-                   
+                    element = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/table/tbody/tr[{count}]/td[5]/a')
                     
                 except:
                     
@@ -153,7 +152,7 @@ class Robo2018():
             
             
             try:
-                element = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div[1]/table/tbody/tr[{i}]/td[5]/a')
+                element = self.driver.find_element_by_xpath(f'/html/body/div[1]/div/div[2]/div[2]/div[2]/div/div/div/table/tbody/tr[{i}]/td[5]/a')
             except:
                 element = element
                 
@@ -162,77 +161,48 @@ class Robo2018():
         
         for i in range(init,morte):
             
+            buttons[i].click()
             
-
-            cookies = self.driver.get_cookies()
+            tm(3)
             
+            arquivos = [_ for _ in os.listdir(self.path) if _.endswith(r'.pdf')]
 
-            cookie = None
-
-            try:
-                cookie = cookies[0]['name']+'='+cookies[0]['value']+'; '+cookies[1]['name']+'='+cookies[1]['value']+'; '+cookies[2]['name']+'='+cookies[2]['value']+'; '+cookies[3]['name']+'='+cookies[3]['value']+'; '+cookies[4]['name']+'='+cookies[4]['value']+'; '+cookies[5]['name']+'='+cookies[5]['value']+'; '
-            except:
-                cookie = cookies[0]['name']+'='+cookies[0]['value']+'; '+cookies[1]['name']+'='+cookies[1]['value']+'; '+cookies[2]['name']+'='+cookies[2]['value']+'; '+cookies[3]['name']+'='+cookies[3]['value']+'; '+cookies[4]['name']+'='+cookies[4]['value']+'; '
-
-
-            headers = {
-
-
-                'Host': 'www8.receita.fazenda.gov.br',
-                'Connection': 'keep-alive',
-                'Cache-Control': 'max-age=0',
-                'Upgrade-Insecure-Requests': '1',
-                'Origin': 'https://www8.receita.fazenda.gov.br',
-                'Content-Type': 'application/x-www-form-urlencoded',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
-                'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                'Sec-Fetch-Site': 'same-origin',
-                'Sec-Fetch-Mode': 'navigate',
-                'Sec-Fetch-User': '?1',
-                'Sec-Fetch-Dest': 'document',
-                'Referer': 'https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/default.aspx',
-                'Accept-Encoding': 'gzip, deflate, br',
-                'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Cookie':cookie
-                
-
-
-
-            }
-            link = str(buttons[i].get_attribute('href'))
-            response = requests.post(link,headers=headers,verify=False)
-            
-            print(response.text)
-            
-            
-
-             
+            print(arquivos)  
             
             texto = tempos[i].text.split('/')
             texto_final = texto[0]+'_'+texto[1]
 
-            if os.path.isdir(self.path+self.detect_plataform()+f'{self.ano}'):
+            if os.path.isdir(self.path+f'/{self.ano}'):
 
                 print('Ja existe o diretorio!!')
 
             else:
 
-                os.mkdir(self.path+self.detect_plataform()+f'{self.ano}')
+                os.mkdir(self.path+f'/{self.ano}')
 
-            directory = self.path+self.detect_plataform()+str(self.ano)+self.detect_plataform()+texto_final+'.pdf'
+            
 
-            open(directory,'wb').write(response.content)
+
+            file = open(self.path+f'/{arquivos[0]}','rb')
+
+            filecreate = open(self.path+f'/{self.ano}/{texto_final}.pdf','wb')
+            filecreate.write(file.read())
+            filecreate.close()
+
+            file.close()
+
+            os.remove(self.path+f'/{arquivos[0]}')
 
             stractor.main(texto_final+'.pdf',texto_final,self.cnpj,self.ano,self.path+self.detect_plataform()+f'{self.ano}')
 
             porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
             print(porcentagem_conclusao)
             
-            file_json = open(self.cnpj+self.detect_plataform()+'log.json','r').read()
+            file_json = open(self.cnpj+'/log.json','r').read()
             data = json.loads(file_json)
             data['progress'] = porcentagem_conclusao
             dates = json.dumps(data,indent=4)
-            open(self.cnpj+self.detect_plataform()+'log.json','w').write(dates)
+            open(self.cnpj+'/log.json','w').write(dates)
     def verificacao(self):
 
         try:
