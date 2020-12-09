@@ -165,7 +165,15 @@ class Robo2018():
             
 
             cookies = self.driver.get_cookies()
-            open('teste.json','w').write(json.dumps(cookies,indent=4))
+            
+
+            cookie = None
+
+            try:
+                cookie = cookies[0]['name']+'='+cookies[0]['value']+'; '+cookies[1]['name']+'='+cookies[1]['value']+'; '+cookies[2]['name']+'='+cookies[2]['value']+'; '+cookies[3]['name']+'='+cookies[3]['value']+'; '+cookies[4]['name']+'='+cookies[4]['value']+'; '+cookies[5]['name']+'='+cookies[5]['value']+'; '
+            except:
+                cookie = cookies[0]['name']+'='+cookies[0]['value']+'; '+cookies[1]['name']+'='+cookies[1]['value']+'; '+cookies[2]['name']+'='+cookies[2]['value']+'; '+cookies[3]['name']+'='+cookies[3]['value']+'; '+cookies[4]['name']+'='+cookies[4]['value']+'; '
+
 
             headers = {
 
@@ -185,7 +193,7 @@ class Robo2018():
                 'Referer': 'https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/default.aspx',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'Accept-Language': 'pt-BR,pt;q=0.9,en-US;q=0.8,en;q=0.7',
-                'Cookie':'ARRAffinity='+cookies[5]['value']+'; '+'cookieAcessoPJ='+cookies[2]['value']+'; '+'cookieAcessoPJValidade='+cookies[4]['value']+'; '+'sinac.quantidadeMensagens=2; '+'sinac.urlRedirecionamento=/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/default.aspx; '+'ASP.NET_SessionId='+cookies[1]['value']+'; '+'sessao-pgdasd='+cookies[0]['value']+'; '
+                'Cookie':cookie
                 
 
 
