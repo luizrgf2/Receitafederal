@@ -112,7 +112,7 @@ def get_com_tributacao(cnpj:str,text:str):
                 aux4 = str(aux2.split('Parcela 1: ')[1].split('\n')[0].strip(' '))
                 aux4 = aux4[0:len(aux4)-1]
 
-            if result == aux4:
+            if aux4.find(result) != -1:
                 lista.append(result)
                 lista.append('parcela 1')
             else:
@@ -121,7 +121,8 @@ def get_com_tributacao(cnpj:str,text:str):
             
         else:
             aux4 = aux2.split('Parcela 1 = ')[1].split('\n')[0].strip(' ')
-            if result == aux4:
+            print(aux4)
+            if aux4.find(result) != -1:
                 lista.append(result)
                 lista.append('parcela 1')
             else:
@@ -273,8 +274,8 @@ def get_total_receita_bruta(text:str):
     elif text_cnpj.find('Data de abertura no CNPJ:') != -1:
         string_data_abertura = text_cnpj.split('Data de abertura no CNPJ: ')[1].strip(' ').split('\n')[0].split('/')[1]+'/'+text_cnpj.split('Data de abertura no CNPJ: ')[1].strip(' ').split('\n')[0].split('/')[2]
     
-
-    ano_init = int(string_data_abertura.split('/')[1])
+    
+    ano_init = int(string_data_abertura.split('/')[1].split(' ')[0])
     mes_init = int(string_data_abertura.split('/')[0])
     ano_ap = int(string_data_apuracao.split('/')[1])
     mes_ap = int(string_data_apuracao.split('/')[0])
@@ -292,7 +293,7 @@ def get_total_receita_bruta(text:str):
         else:
             receita_bruta = text_cnpj.split('(RBT12p)')[1].strip(' ').split(' ')[0]
 
-    elif ano_init+1<ano_ap:
+    else:
         receita_bruta = text_cnpj.split('(RBT12)')[1].strip(' ').split(' ')[0]
 
 
@@ -317,26 +318,68 @@ def main(name_file,name_file_out,cnpj,data_init,path):
     
     if data_init >= data - 5 and data_init != 2015:
         text = get_text_from_file(name_file,path)
+        text_lines = []
+
+        if text.find('CNPJ Estabelecimento: ') != -1:
+            text_lines = text.split('CNPJ Estabelecimento: ')
+            for text_line in text_lines:
+                
+                cnpj_atual = text_line[0:18]
+               
+                try:
+                    total_estabelecimento = search_from_cpf(cnpj_atual,text)
+              
+                    com_icms = get_com_tributacao(cnpj_atual,text)
+                    sem_icms = get_sem_tributacao(cnpj_atual,text)
+                    prestacao = get_prestacao_servicos(cnpj_atual,text)
+                    total_receita_bruta = get_total_receita_bruta(text)
+                    dicionario = {
+
+                        'totais_do_estabelecimento':total_estabelecimento,
+                        'com_icms' : com_icms,
+                        'sem_icms' : sem_icms,
+                        'prestacao_de_servircos': prestacao,
+                        'total_receita_bruta': total_receita_bruta
+
+                    }
+                    
+                    cnpj_com_mascara_separado_por_pontos = cnpj_atual.split('.')   
+                    cnpj_sem_mascara = cnpj_com_mascara_separado_por_pontos[0]+cnpj_com_mascara_separado_por_pontos[1]+cnpj_com_mascara_separado_por_pontos[2].split('/')[0]+cnpj_com_mascara_separado_por_pontos[2].split('/')[1].split('-')[0]+cnpj_atual.split('-')[1]
+                    open(path+get_plataform()+name_file_out+'_'+cnpj_sem_mascara+'.json','w').write(json.dumps(dicionario,indent=4))
+                except Exception as e:
+                    print(e)
+        else:
+            text_lines = text.split('CNPJ: ')
+            print(len(text_lines))
+            for text_line in text_lines:
+                
+                cnpj_atual = text_line[0:18]
+                print(cnpj_atual)
+                try:
+                    total_estabelecimento = search_from_cpf(cnpj_atual,text)
+                    com_icms = get_com_tributacao(cnpj_atual,text)
+                    sem_icms = get_sem_tributacao(cnpj_atual,text)
+                    prestacao = get_prestacao_servicos(cnpj_atual,text)
+                    total_receita_bruta = get_total_receita_bruta(text)
+                    dicionario = {
+
+                        'totais_do_estabelecimento':total_estabelecimento,
+                        'com_icms' : com_icms,
+                        'sem_icms' : sem_icms,
+                        'prestacao_de_servircos': prestacao,
+                        'total_receita_bruta': total_receita_bruta
+
+                    }
+                    
+                    print(dicionario)
+                    cnpj_com_mascara_separado_por_pontos = cnpj_atual.split('.')   
+                    cnpj_sem_mascara = cnpj_com_mascara_separado_por_pontos[0]+cnpj_com_mascara_separado_por_pontos[1]+cnpj_com_mascara_separado_por_pontos[2].split('/')[0]+cnpj_com_mascara_separado_por_pontos[2].split('/')[1].split('-')[0]+cnpj_atual.split('-')[1]
+                    open(path+get_plataform()+name_file_out+'_'+cnpj_sem_mascara+'.json','w').write(json.dumps(dicionario,indent=4))
+                except:
+                    print('')
+            
+
         
-        total_estabelecimento = search_from_cpf(transfrom_cnpj,text)
-        com_icms = get_com_tributacao(transfrom_cnpj,text)
-        sem_icms = get_sem_tributacao(transfrom_cnpj,text)
-        prestacao = get_prestacao_servicos(transfrom_cnpj,text)
-        total_receita_bruta = get_total_receita_bruta(text)
-        dicionario = {
-
-            'totais_do_estabelecimento':total_estabelecimento,
-            'com_icms' : com_icms,
-            'sem_icms' : sem_icms,
-            'prestacao_de_servircos': prestacao,
-            'total_receita_bruta': total_receita_bruta
-
-        }
-
-        open(path+get_plataform()+name_file_out+'_'+cnpj+'.json','w').write(json.dumps(dicionario,indent=4))
-
-
-
 
 
 
