@@ -58,7 +58,7 @@ def get_text_from_file(name_file:str,path:str):
             driver.find_element_by_xpath('/html/body/div[4]/div[3]/div[2]/div[1]/div[3]/div[1]/table/tbody/tr/td[4]/a[2]/span').click()
             break
         except Exception as e:
-            print(e)     
+            print()     
     return response.text
 def search_from_cpf(cnpj:str,text:str):
 

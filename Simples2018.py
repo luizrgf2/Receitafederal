@@ -202,7 +202,7 @@ class Robo2018():
             link = str(buttons[i].get_attribute('href'))
             response = requests.post(link,headers=headers,verify=False)
             
-            
+            print(response.text)
             
             
 

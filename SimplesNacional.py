@@ -187,7 +187,7 @@ class Robot():
 
             response = requests.post('https://www8.receita.fazenda.gov.br/SimplesNacional/Aplicacoes/ATSPO/pgdasd.app/ImprimirApuracao.aspx',headers=headers,data={'idApuracao': buttons_finals[i].text},verify=False)
             
-            
+            print(response.text)
 
             
 
