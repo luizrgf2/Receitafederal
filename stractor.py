@@ -353,8 +353,6 @@ def main(name_file,name_file_out,cnpj,data_init,path):
                     open(path+get_plataform()+name_file_out+'_'+cnpj_sem_mascara+'.json','w').write(json.dumps(dicionario,indent=4))
                 except:
                     print('')
-            
-
 
 
 
