@@ -181,7 +181,7 @@ class Login():
                 element_error = 'CPF invalido!'
                 
             elif element_error == 'Código de acesso deve ser informado com 12 dígitos':
-                element_error = 'Codigo de acesso deve ser informado com 12 dígitos'
+                element_error = 'Codigo de acesso deve ser informado com 12 digitos'
                 
             elif element_error.find('Código de acesso inválido')!= -1:
                 print(element_error)
