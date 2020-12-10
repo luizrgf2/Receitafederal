@@ -193,7 +193,7 @@ class Robo2018():
 
             os.remove(self.path+f'/{arquivos[0]}')
 
-            stractor.main(texto_final+'.pdf',texto_final,self.cnpj,self.ano,self.path+self.detect_plataform()+f'{self.ano}')
+            stractor.main(texto_final+'.pdf',texto_final,self.cnpj,2016,self.path+self.detect_plataform()+f'{self.ano}')
 
             porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
             print(porcentagem_conclusao)

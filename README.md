@@ -16,6 +16,8 @@ pip install python_anticaptcha
 
 pip install argparse 
 
+pip install PyPDF4
+
  
  
 

@@ -4,6 +4,11 @@ from time import sleep as tm
 import requests
 import datetime
 import json
+import PyPDF4
+
+import re
+
+import io
 
 
 def get_plataform():
@@ -16,57 +21,28 @@ def get_plataform():
         return '\\'
 def get_text_from_file(name_file:str,path:str):
     
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument('ignore-certificate-errors')
-    chrome_options.add_argument('--no-sandbox')
-    import platform
+    text_final = ''
 
-    if platform.system() == 'Linux':
+    pdfFileObj = open(path+get_plataform()+name_file, 'rb')
 
-        driver = webdriver.Chrome(executable_path=os.getcwd()+get_plataform()+'chromedriver',chrome_options=chrome_options)
-    else:
-        
-        driver = webdriver.Chrome(executable_path=os.getcwd()+get_plataform()+'chromedriver.exe',chrome_options=chrome_options)
-        
+    pdfReader = PyPDF4.PdfFileReader(pdfFileObj)
 
 
-    driver.get('https://www.aconvert.com/pdf/pdf-to-txt/#')
-    while True:
-        try:
-            inputt = driver.find_element_by_id('file')
-            inputt.send_keys(path+get_plataform()+name_file)
-            break
-        except Exception as e:
-            print(e)
-    while True:
-        try:
-            driver.find_element_by_id('submitbtn').click()
-            break
-        except Exception as e:
-            print(e)
-    response = None
-    
-    while True:
-        try:
-            
-            link = driver.find_element_by_xpath('/html/body/div[4]/div[3]/div[2]/div[1]/div[3]/div[1]/table/tbody/tr/td[2]/a').get_attribute('href')
-            print(link)
-            response = requests.get(link)
-            
-            
-            driver.find_element_by_xpath('/html/body/div[4]/div[3]/div[2]/div[1]/div[3]/div[1]/table/tbody/tr/td[4]/a[2]/span').click()
-            break
-        except Exception as e:
-            print()     
-    return response.text
+    for i in range(pdfReader.getNumPages()):
+        pageObj = pdfReader.getPage(i)
+        pages_text = pageObj.extractText()
+        for line in io.StringIO(pages_text):
+
+            text_final= text_final+line+'\n'
+
+    return text_final
 def search_from_cpf(cnpj:str,text:str):
 
     text_cpf  = text
     aux1 = text_cpf.split(f': {cnpj}')[1]
     aux2 = aux1.split('Valor Informado: ')[1]
     value = aux2.split('\n')[0]
-    value = value[0:len(value)-1]
+    
 
     return value
 def get_com_tributacao(cnpj:str,text:str):
@@ -89,28 +65,28 @@ def get_com_tributacao(cnpj:str,text:str):
 
             aux3 = aux2.split('Receita Bruta Informada: R$ ')[1]
             aux4 = aux3.split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
+            
             result = aux4.strip(' ')
         elif aux2.find('Valor Total (R$): ') != -1:
             
             aux3 = aux2.split('Valor Total (R$): ')[1]
             aux4 = aux3.split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
-            result = aux4.strip(' ')
-        elif aux2.find('Valor Total (R$):') != -1:
             
-            aux3 = aux2.split('Valor Total (R$):')[1]
-            aux4 = aux3.split('                                            ')[1].split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
+            result = aux4.strip(' ')
+        elif aux2.find('Valor Total (R$):\n') != -1:
+            
+            aux3 = aux2.split('Valor Total (R$):\n')[1].split('\n')[1]
+            aux4 = aux3.split('\n')[0]
+            
             result = aux4.strip(' ')
         if aux2.find('Parcela 1:') != -1:
 
             try:
                 aux4 = aux2.split('Parcela 1: R$ ')[1].split('\n')[0].strip(' ')
-                aux4 = aux4[0:len(aux4)-1]
+                
             except:
                 aux4 = str(aux2.split('Parcela 1: ')[1].split('\n')[0].strip(' '))
-                aux4 = aux4[0:len(aux4)-1]
+                
 
             if aux4.find(result) != -1:
                 lista.append(result)
@@ -121,7 +97,7 @@ def get_com_tributacao(cnpj:str,text:str):
             
         else:
             aux4 = aux2.split('Parcela 1 = ')[1].split('\n')[0].strip(' ')
-            print(aux4)
+
             if aux4.find(result) != -1:
                 lista.append(result)
                 lista.append('parcela 1')
@@ -152,30 +128,30 @@ def get_sem_tributacao(cnpj:str,text:str):
 
             aux3 = aux2.split('Receita Bruta Informada: R$ ')[1]
             aux4 = aux3.split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
+            
             result = aux4.strip(' ')
         elif aux2.find('Valor Total (R$): ') != -1:
             
             aux3 = aux2.split('Valor Total (R$): ')[1]
             aux4 = aux3.split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
-            result = aux4.strip(' ')
-        elif aux2.find('Valor Total (R$):') != -1:
             
-            aux3 = aux2.split('Valor Total (R$):')[1]
-            aux4 = aux3.split('                                            ')[1].split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
+            result = aux4.strip(' ')
+        elif aux2.find('Valor Total (R$):\n') != -1:
+            
+            aux3 = aux2.split('Valor Total (R$):\n')[1].split('\n')[1]
+            aux4 = aux3.split('\n')[0]
+            
             result = aux4.strip(' ')
         if aux2.find('Parcela 1:') != -1:
 
             try:
                 aux4 = aux2.split('Parcela 1: R$ ')[1].split('\n')[0].strip(' ')
-                aux4 = aux4[0:len(aux4)-1]
+                
             except:
                 aux4 = aux2.split('Parcela 1: ')[1].split('\n')[0].strip(' ')
-                aux4 = aux4[0:len(aux4)-1]
 
-            if result == aux4:
+
+            if aux4.find(result) != -1:
                 lista.append(result)
                 lista.append('parcela 1')
             else:
@@ -184,8 +160,8 @@ def get_sem_tributacao(cnpj:str,text:str):
             
         else:
             aux4 = aux2.split('Parcela 1 = ')[1].split('\n')[0].strip(' ')
-            aux4 = aux4[0:len(aux4)-1]
-            if result == aux4:
+            
+            if aux4.find(result)!= -1:
                 lista.append(result)
                 lista.append('parcela 1')
             else:
@@ -213,28 +189,27 @@ def get_prestacao_servicos(cnpj:str,text:str):
 
             aux3 = aux2.split('Receita Bruta Informada: R$ ')[1]
             aux4 = aux3.split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
+            
             result = aux4.strip(' ')
         elif aux2.find('Valor Total (R$): ') != -1:
             
             aux3 = aux2.split('Valor Total (R$): ')[1]
             aux4 = aux3.split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
             result = aux4.strip(' ')
-        elif aux2.find('Valor Total (R$):') != -1:
+        elif aux2.find('Valor Total (R$):\n') != -1:
             
-            aux3 = aux2.split('Valor Total (R$):')[1]
-            aux4 = aux3.split('                                            ')[1].split('\n')[0]
-            aux4 = aux4[0:len(aux4)-1]
+            aux3 = aux2.split('Valor Total (R$):\n')[1].split('\n')[1]
+            aux4 = aux3.split('\n')[0]
+            
             result = aux4.strip(' ')
         if aux2.find('Parcela 1:') != -1:
 
             try:
                 aux4 = aux2.split('Parcela 1: R$ ')[1].split('\n')[0].strip(' ')
-                aux4 = aux4[0:len(aux4)-1]
+                
             except:
                 aux4 = aux2.split('Parcela 1: ')[1].split('\n')[0].strip(' ')
-                aux4 = aux4[0:len(aux4)-1]
+                
             if result == aux4:
                 lista.append(result)
                 lista.append('parcela 1')
@@ -244,8 +219,8 @@ def get_prestacao_servicos(cnpj:str,text:str):
             
         else:
             aux4 = aux2.split('Parcela 1 = ')[1].split('\n')[0].strip(' ')
-            aux4 = aux4[0:len(aux4)-1]
-            if result == aux4:
+            
+            if aux4.find(result) != -1:
                 lista.append(result)
                 lista.append('parcela 1')
             else:
@@ -272,7 +247,8 @@ def get_total_receita_bruta(text:str):
     elif text_cnpj.find('Data de Abertura: ') != -1:
         string_data_abertura = str(text_cnpj.split('Data de Abertura: ')[1].strip(' ').split('\n')[0].split('/')[1]+'/'+text_cnpj.split('Data de Abertura: ')[1].strip(' ').split('\n')[0].split('/')[2]).split(' ')[0]
     elif text_cnpj.find('Data de abertura no CNPJ:') != -1:
-        string_data_abertura = text_cnpj.split('Data de abertura no CNPJ: ')[1].strip(' ').split('\n')[0].split('/')[1]+'/'+text_cnpj.split('Data de abertura no CNPJ: ')[1].strip(' ').split('\n')[0].split('/')[2]
+        string_data_abertura = text_cnpj.split('Data de abertura no CNPJ:\n')[1].split('\n')[1].split('\n')[0]
+    
     
     
     ano_init = int(string_data_abertura.split('/')[1].split(' ')[0])
@@ -281,20 +257,20 @@ def get_total_receita_bruta(text:str):
     mes_ap = int(string_data_apuracao.split('/')[0])
 
     if ano_init == ano_ap:
-        receita_bruta = text_cnpj.split('(RBT12p)')[1].strip(' ').split(' ')[0]
+        receita_bruta = text_cnpj.split('(RBT12p)\n')[1].split('\n')[1].split('\n')[0]
     elif ano_init+1 == ano_ap:
 
         value_in_meses = (12 - mes_init)+mes_ap
         
 
         if value_in_meses >= 13:
-            receita_bruta = text_cnpj.split('(RBT12)')[1].strip(' ').split(' ')[0]
+            receita_bruta = text_cnpj.split('(RBT12)\n')[1].split('\n')[1].split('\n')[0]
             
         else:
-            receita_bruta = text_cnpj.split('(RBT12p)')[1].strip(' ').split(' ')[0]
+            receita_bruta = text_cnpj.split('(RBT12p)\n')[1].split('\n')[1].split('\n')[0]
 
     else:
-        receita_bruta = text_cnpj.split('(RBT12)')[1].strip(' ').split(' ')[0]
+        receita_bruta = text_cnpj.split('(RBT12)\n')[1].split('\n')[1].split('\n')[0]
 
 
         
@@ -379,7 +355,7 @@ def main(name_file,name_file_out,cnpj,data_init,path):
                     print('')
             
 
-        
+
 
 
 
