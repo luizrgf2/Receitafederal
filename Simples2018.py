@@ -61,7 +61,10 @@ class Robo2018():
     def Downloads(self,ano,init,final):
         porcentagem_conclusao = 0
 
-
+        file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+        json_log = json.loads(open(self.cnpj+"/log.json",'r').read())
+        file_reader = file_reader+'\n'+'Falta baixar='+str(json_log['num_pds_to_downloads'])
+        open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
 
 
         file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
@@ -88,6 +91,10 @@ class Robo2018():
             print('Nao existe dados para este ano!')
             file_json = json.loads(open(self.cnpj+"/log.json",'r').read())
             file_json['pgdas'] = "Nao existe dados para este ano!"
+            file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+            json_log = json.loads(open(self.cnpj+"/log.json",'r').read())
+            file_reader = file_reader+'\n'+'Nao existe dados para este ano!',
+            open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
             data = json.dumps(file_json,indent=4)
             open(self.cnpj+"/log.json",'w').write(data)
             return
@@ -198,16 +205,19 @@ class Robo2018():
             json_log = json.loads(open(self.cnpj+"/log.json",'r').read())
             porcentagem_conclusao = 100/json_log['num_pds_to_downloads']
             print(porcentagem_conclusao)
-            
             json_log['num_pds_to_downloads'] = json_log['num_pds_to_downloads']-1
+            file_reader = file_reader+'\n'+'Falta baixar='+str(json_log['num_pds_to_downloads'])
+            open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
             open(self.cnpj+"/log.json",'w').write(json.dumps(json_log))
             
             file_json = open(self.cnpj+'/log.json','r').read()
             data = json.loads(file_json)
             data['progress'] = porcentagem_conclusao
-            
+            open(self.path+self.detect_plataform()+'progress.txt','w').write(str(porcentagem_conclusao))
             dates = json.dumps(data,indent=4)
             open(self.cnpj+'/log.json','w').write(dates)
+            
+
     def verificacao(self):
 
         try:

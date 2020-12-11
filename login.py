@@ -7,6 +7,7 @@ import os
 from time import sleep as tm
 import base64
 from pathlib import Path
+from datetime import date
 
 class Login():
 
@@ -60,13 +61,17 @@ class Login():
         else:
             return '\\'
     def login(self):
-
+        open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write('init '+str(date.today().ctime()))
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCNPJ').send_keys(self.cnpj)
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCPFResponsavel').send_keys(self.cpf)
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.password)
         tm(3)
         self.sistema_capcha()
         self.driver.close()
+        file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+        file_reader = file_reader+'\n'+'Sucesso Login!'
+        open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
     def sistema_capcha(self):
         
         while(True):
@@ -87,10 +92,16 @@ class Login():
                     try:
                         self.driver.find_elements_by_id('ctl00_ContentPlaceHolder_lblErro')
                         print('Captcha errado')
+
+
+
                     except:
                         break
                 except:
                     print('Não existe saldo para o uso do sistema de antcaptcha!')
+                    file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+                    file_reader = file_reader+'\n'+'Não existe saldo para o uso do sistema de antcaptcha!'
+                    open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
                     self.captcha = False
             elif self.captcha == False:
                 try:
@@ -132,7 +143,7 @@ class Login():
 
         base64_img = image_base64.encode('utf-8')
 
-
+        open(self.path+self.detect_plataform()+'image.txt','w').write(img)
          
 
         open(f'{self.path}'+self.detect_plataform()+'image.png','wb').write(base64.decodebytes(base64_img))
@@ -150,7 +161,11 @@ class Login():
             except:
 
                 print('Aguardando!....')
-                tm(3) 
+                tm(3)
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+'Aguardando!'
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader) 
                 
 
 
@@ -167,6 +182,10 @@ class Login():
             print(element_error)
             if element_error == 'Caracteres anti-robô inválidos. Tente novamente.':
                 element_error = 'Captcha errado!'
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
             elif element_error == 'Número de CNPJ fornecido não cadastrado no CNPJ':
                 element_error = 'CNPJ fornecido nao cadastrado no CNPJ!'
                 file_log = open(self.path+self.detect_plataform()+'log.json','r')
@@ -174,19 +193,48 @@ class Login():
                 dados['login_error'] = element_error
                 data = json.dumps(dados,indent=4)
                 open(self.path+self.detect_plataform()+'log.json','w',-1, "utf-8").write(data)
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
                 dir = Path(self.path)
                 dir.rmdir()
                 sys.exit()
                 
             elif element_error == 'CPF inválido não cadastrado na base CPF':
                 element_error = 'CPF invalido!'
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
                 
             elif element_error == 'Código de acesso deve ser informado com 12 dígitos':
                 element_error = 'Codigo de acesso deve ser informado com 12 digitos'
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
                 
             elif element_error.find('Código de acesso inválido')!= -1:
                 print(element_error)
                 element_error = 'Codigo de acesso invalido'
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
+                file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
+
+                file_reader = file_reader+'\n'+element_error
+                open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
+            
                 
 
 
@@ -215,6 +263,7 @@ class Login():
                     
                     dates = json.dumps(dicts,indent=4)
                     open(self.path+self.detect_plataform()+'log.json','w').write(dates)
+
                     
 
 
