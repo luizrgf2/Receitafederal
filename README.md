@@ -21,24 +21,60 @@ pip install PyPDF4
  
  
 
-Para o windows é necessário baixar o python direto do site oficial e manter o pip junto da instalação, apos isso apenas execute o install.bat 
+Para o windows é necessário baixar o python direto do site oficial e manter o pip junto da instalação, após isso apenas execute o install.bat 
 
  
  
 
 ## execução 
 
+execute main.py para iniciar o servidor.
+
+Use a url base http://127.0.0.1:5000
+    
+na rota /enviarpedido
+
+    exemplo enviando dados para login e datas de download pgdas:
+    
+    POST REQUEST
+
+    json_file = {
+        "password":"337563864600",
+        "cnpj":"00448750000120",
+        "cpf":"60087846934",
+        "antcap":true,
+        "year_init":2017,
+        "day_init":2,
+        "year_final":2018,
+        "day_final":9,
+        "visible":false
+        }
+
+
+
+    json_file deve ser enviado no body da requisição para a url http://127.0.0.1:5000/enviarpedido.
+
+na rota /enviarjson 
+
+    exemplo enviando captcha para login:
+
+    POST REQUEST
+
+    json_file={
+
+        "cnpj":"00448750000120",
+        "cap":"teste"
+
+    }
+    
+    
+    json_file deve ser enviado no body da requisição para a url http://127.0.0.1:5000/enviarjson.
+
+## possíveis rotas:
+    /enviarpedido = request do tipo post enviando um json com todos os dados citados a cima, no body da requisição.
+    /pegarlog = request do tipo post enviando o cnpj do cliente como STRING no body da requisição.
+    /pegarimagem = request do tipo post enviando o cnpj do cliente como STRING no body da requisição.
+    /pegarprogresso = request do tipo post enviando o cnpj do cliente como STRING no body da requisição.
+    /enviarjson  = request do tipo post enviando um json com todos os dados citados a cima, no body da requisição.
  
- 
 
-python main.py Password|Cnpj|Cpf|Antcaptcha|Ano_inicio|dia_inicio|Ano_final|Dia_final|visisvel
-
-
- 
-
-exemplo: 
-
- 
- 
-
-python main.py 337563864600 00448750000120 60087846934 True 2018 6 2018 8 True
