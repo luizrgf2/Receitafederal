@@ -14,6 +14,34 @@ parser.add_argument('year_final')
 parser.add_argument('day_final')
 parser.add_argument('visivel')
 args = parser.parse_args()
+count_pgds_aux = 0
+count_pgds = 0
+
+def detect_plataform():
+
+    import platform
+
+    if platform.system() == 'Linux':
+        return '/'
+    else:
+        return '\\'
+
+if args.year_init != args.year_final:
+    count_pgds_aux = int(args.year_final)-int(args.year_init)-1
+    count_pgds = (13-int(args.day_init))+(count_pgds_aux*12)+int(args.day_final)
+else:
+    
+    count_pgds = (13-int(args.day_init))+int(args.day_final)
+
+print(count_pgds)
+
+
+try:
+    os.remove(os.getcwd()+detect_plataform()+args.cnpj+detect_plataform()+'log.json')
+except:
+    print()
+    
+
 
 
 def Escolha(year1,year2,controller,day_init,day_final,visivel):
@@ -46,8 +74,10 @@ def Escolha(year1,year2,controller,day_init,day_final,visivel):
                
                robo.Downloads(str(ano_atual),day_init,0)
             elif i > 0 and i<dif_anual-1:
+                
                 robo.Downloads(str(ano_atual),0,0)
             elif i == dif_anual-1:
+                
                 robo.Downloads(str(ano_atual),0,day_final)
                 
             ano_atual=ano_atual+1
@@ -59,8 +89,10 @@ def Escolha(year1,year2,controller,day_init,day_final,visivel):
                
                robot.Downloads(str(ano_atual),day_init,0)
             elif i > 0 and i<dif_anual-1:
+                
                 robot.Downloads(str(ano_atual),0,0)
             elif i == dif_anual-1:
+               
                 robot.Downloads(str(ano_atual),0,day_final)
                 
             ano_atual=ano_atual+1
@@ -79,7 +111,7 @@ def main():
         
         visivel= True
     
-    login = Login(visivel,args.cpf,args.password,args.cnpj,controller)
+    login = Login(visivel,args.cpf,args.password,args.cnpj,controller,count_pgds)
     login.login()
         
     day_init = int(args.day_init)-1

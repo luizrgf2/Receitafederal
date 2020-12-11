@@ -10,11 +10,12 @@ from pathlib import Path
 
 class Login():
 
-    def __init__(self,visible,cpf,password,cnpj,captcha):
+    def __init__(self,visible,cpf,password,cnpj,captcha,count_pgds):
 
         self.captcha = captcha
         json_file = open('atrr.json','r')
         cache = json.loads(json_file.read())
+        self.count_pgds = count_pgds
         
         self.cpf = cpf
         self.cnpj = cnpj
@@ -208,10 +209,14 @@ class Login():
 
                         "progress": 0,
                         "login_error": 'Sucesso',
-                        "pgdas": None
+                        "pgdas": None,
+                        "num_pds_to_downloads":self.count_pgds
                     }
+                    
                     dates = json.dumps(dicts,indent=4)
                     open(self.path+self.detect_plataform()+'log.json','w').write(dates)
+                    
+
 
 
 
@@ -222,7 +227,8 @@ class Login():
 
                     "progress":0,
                     "login_error":element_error,
-                    "pgdas":None
+                    "pgdas":None,
+                    "num_pds_to_downloads":0
 
 
                 }

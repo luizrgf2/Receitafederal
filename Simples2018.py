@@ -58,7 +58,7 @@ class Robo2018():
         self.verificacao()
 
         tm(2)
-    def Downloads(self,ano,init,final):
+    def Downloads(self,ano,init,final,progress):
         porcentagem_conclusao = 0
 
 
@@ -195,12 +195,17 @@ class Robo2018():
 
             stractor.main(texto_final+'.pdf',texto_final,self.cnpj,2016,self.path+self.detect_plataform()+f'{self.ano}')
 
-            porcentagem_conclusao =  porcentagem_conclusao + 100/(morte-init)
+            json_log = json.loads(open(self.cnpj+"/log.json",'r').read())
+            porcentagem_conclusao = 100/json_log['num_pds_to_downloads']
             print(porcentagem_conclusao)
+            
+            json_log['num_pds_to_downloads'] = json_log['num_pds_to_downloads']-1
+            open(self.cnpj+"/log.json",'w').write(json.dumps(json_log))
             
             file_json = open(self.cnpj+'/log.json','r').read()
             data = json.loads(file_json)
             data['progress'] = porcentagem_conclusao
+            
             dates = json.dumps(data,indent=4)
             open(self.cnpj+'/log.json','w').write(dates)
     def verificacao(self):
