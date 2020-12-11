@@ -58,7 +58,7 @@ class Robo2018():
         self.verificacao()
 
         tm(2)
-    def Downloads(self,ano,init,final,progress):
+    def Downloads(self,ano,init,final):
         porcentagem_conclusao = 0
 
 
