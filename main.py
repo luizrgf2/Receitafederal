@@ -26,12 +26,15 @@ def detect_plataform():
     else:
         return '\\'
 
-if args.year_init != args.year_final:
+if int(args.year_init) != int(args.year_final):
     count_pgds_aux = int(args.year_final)-int(args.year_init)-1
     count_pgds = (13-int(args.day_init))+(count_pgds_aux*12)+int(args.day_final)
 else:
     
-    count_pgds = (13-int(args.day_init))+int(args.day_final)
+    count_pgds = (int(args.day_init)-int(args.day_final))
+
+    if count_pgds < 0:
+        count_pgds = (count_pgds*-1)+1
 
 print(count_pgds)
 
