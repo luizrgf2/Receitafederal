@@ -5,9 +5,7 @@ import requests
 import datetime
 import json
 import PyPDF4
-
 import re
-
 import io
 
 
