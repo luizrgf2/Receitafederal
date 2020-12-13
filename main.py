@@ -102,9 +102,10 @@ def main(password,cnpj,cpf,ant,year_init,day_init,year_final,day_final,visivel):
     
     if year_final != year_init:
         Escolha(year_init,year_final,ant,day_init,day_final,visivel,password,cnpj,cpf)
-        open(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'progress.txt','w').truncate(0)
-        open(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+cnpj+'.txt','w').truncate(0)
-        open(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'image.txt','w').truncate(0)
+        os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'progress.txt')
+        os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+cnpj+'.txt')
+        os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'image.txt')
+        os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'log.json')
     else:
         
         if year_init > 2017:
@@ -116,9 +117,10 @@ def main(password,cnpj,cpf,ant,year_init,day_init,year_final,day_final,visivel):
             robo = Robot(password,cnpj,cpf,ant,visivel)
             
             robo.Downloads(year_init,day_init,day_final)
-            open(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'progress.txt','w').truncate(0)
-            open(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+cnpj+'.txt','w').truncate(0)
-            open(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'image.txt','w').truncate(0)
+            os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'progress.txt')
+            os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+cnpj+'.txt')
+            os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'image.txt')
+            os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'log.json')
 @app.route('/enviarpedido',methods=['POST'])
 def init_api():
 
@@ -128,7 +130,7 @@ def init_api():
 
 
     _thread.start_new_thread(main,(json_file['password'],json_file['cnpj'],json_file['cpf'],json_file['antcap'],json_file['year_init'],json_file['day_init']-1,json_file['year_final'],json_file['day_final'],json_file['visible']))
-
+    
     return json_file['cnpj']
 @app.route('/pegarlog',methods=["POST"])
 def check_log():
