@@ -203,7 +203,11 @@ class Robo2018():
             stractor.main(texto_final+'.pdf',texto_final,self.cnpj,2016,self.path+self.detect_plataform()+f'{self.ano}')
 
             json_log = json.loads(open(self.cnpj+"/log.json",'r').read())
-            porcentagem_conclusao = 100/json_log['num_pds_to_downloads']
+            
+            try:
+                porcentagem_conclusao = 100/json_log['num_pds_to_downloads']
+            except:
+                print(json_log['num_pds_to_downloads'])
             print(porcentagem_conclusao)
             json_log['num_pds_to_downloads'] = json_log['num_pds_to_downloads']-1
             file_reader = file_reader+'\n'+'Falta baixar='+str(json_log['num_pds_to_downloads'])
