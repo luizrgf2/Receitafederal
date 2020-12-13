@@ -63,6 +63,7 @@ class Login():
     def login(self):
         open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write('init '+str(date.today().ctime()))
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCNPJ').send_keys(self.cnpj)
+        self.get_image()
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCPFResponsavel').send_keys(self.cpf)
         self.driver.find_element_by_name('ctl00$ContentPlaceHolder$txtCodigoAcesso').send_keys(self.password)
         tm(3)

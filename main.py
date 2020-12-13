@@ -139,7 +139,7 @@ def check_log():
         file_read = open(os.getcwd()+detect_plataform()+texto+detect_plataform()+texto+'.txt','r').read()
         return file_read
     except:
-        return 'O arquivo não foi encontrado'
+        return 'Aguarde o inicio do processo!'
 
 @app.route('/pegarimagem',methods=["POST"])
 def get_image():
@@ -150,7 +150,7 @@ def get_image():
         file_read = open(os.getcwd()+detect_plataform()+texto+detect_plataform()+'image.txt','r').read()
         return file_read
     except:
-        return 'O arquivo não foi encontrado'
+        return 'Aguarde o captcha ser capturada!'
 @app.route('/pegarprogresso',methods=["POST"])
 def get_progres_download():
 
@@ -160,7 +160,7 @@ def get_progres_download():
         file_read = open(os.getcwd()+detect_plataform()+texto+detect_plataform()+'progress.txt','r').read()
         return file_read
     except:
-        return 'O arquivo não foi encontrado'
+        return 'Aguarde os downloads começarem !'
 @app.route('/enviarjson',methods=["POST"])
 def set_json():
 
