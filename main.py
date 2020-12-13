@@ -106,6 +106,10 @@ def main(password,cnpj,cpf,ant,year_init,day_init,year_final,day_final,visivel):
         os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+cnpj+'.txt')
         os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'image.txt')
         os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'log.json')
+        try:
+            os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'cap.json')
+        except:
+            print()
     else:
         
         if year_init > 2017:
@@ -121,6 +125,10 @@ def main(password,cnpj,cpf,ant,year_init,day_init,year_final,day_final,visivel):
             os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+cnpj+'.txt')
             os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'image.txt')
             os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'log.json')
+            try:
+                os.remove(os.getcwd()+detect_plataform()+cnpj+detect_plataform()+'cap.json')
+            except:
+                print()
 @app.route('/enviarpedido',methods=['POST'])
 def init_api():
 
