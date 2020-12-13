@@ -63,7 +63,6 @@ class Robo2018():
 
         file_reader = open(self.path+self.detect_plataform()+self.cnpj+'.txt','r').read()
         json_log = json.loads(open(self.cnpj+"/log.json",'r').read())
-        file_reader = file_reader+'\n'+'Falta baixar='+str(json_log['num_pds_to_downloads'])
         open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
 
 
