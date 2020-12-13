@@ -93,6 +93,7 @@ class Login():
                     try:
                         self.driver.find_elements_by_id('ctl00_ContentPlaceHolder_lblErro')
                         print('Captcha errado')
+                        
 
 
 
