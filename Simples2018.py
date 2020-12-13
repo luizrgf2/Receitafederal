@@ -210,7 +210,7 @@ class Robo2018():
                 print(json_log['num_pds_to_downloads'])
             print(porcentagem_conclusao)
             json_log['num_pds_to_downloads'] = json_log['num_pds_to_downloads']-1
-            file_reader = file_reader+'\n'+'Falta baixar='+str(json_log['num_pds_to_downloads'])
+            file_reader = file_reader+'\n'+'Baixando='+texto_final
             open(self.path+self.detect_plataform()+self.cnpj+'.txt','w').write(file_reader)
             open(self.cnpj+"/log.json",'w').write(json.dumps(json_log))
             
